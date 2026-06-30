@@ -1,0 +1,30 @@
+<div class="view-container">
+    <div style="margin-bottom: 16px;">
+        <button class="btn btn-secondary" onclick="loadView('task-list')" style="padding: 6px 12px; font-size: 14px;">← 一覧に戻る</button>
+    </div>
+    
+    <div class="card">
+        <h2 class="card-title" id="detail-task-title-placeholder">タスク詳細</h2>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">このタスクに含まれる分解ステップ（子タスク）の状態です。</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius); display: flex; justify-content: space-between; background: #f9f9f9;">
+                <span>✓ 机の上のゴミをまとめる</span>
+                <span style="color: #4caf50; font-weight: bold;">完了</span>
+            </div>
+            <div style="padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius); display: flex; justify-content: space-between;">
+                <span>□ 不要な書類をファイリングする</span>
+                <span style="color: #ff9800;">未完了</span>
+            </div>
+            <div style="padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius); display: flex; justify-content: space-between;">
+                <span>□ 床の掃除機がけを行う</span>
+                <span style="color: #ff9800;">未完了</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 24px; display: flex; gap: 12px;">
+            <button class="btn btn-primary" onclick="loadView('proposal')">このタスクの実行支援を開始</button>
+            <button class="btn btn-secondary" style="color: #d32f2f;" onclick="confirm('本当にこのタスクを削除しますか？') ? loadView('task-list') : null">タスクを削除</button>
+        </div>
+    </div>
+</div>

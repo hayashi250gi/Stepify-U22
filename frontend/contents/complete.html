@@ -1,0 +1,22 @@
+<div class="view-container" style="display: flex; align-items: center; justify-content: center; min-height: 70vh;">
+    <div class="card" style="max-width: 500px; width: 100%; text-align: center; padding: 40px 24px;">
+        <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
+        <h2 style="font-size: 26px; margin-bottom: 8px;">ナイスステップ！</h2>
+        <p style="color: var(--text-muted); margin-bottom: 24px;">小さな完了の積み重ねが大きな前進を生みます。</p>
+        
+        <div class="card" style="background-color: #fafafa; border: 1px solid var(--border-color); padding: 16px; margin-bottom: 30px; text-align: left;">
+            <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px;">
+                <span>親タスクの進捗状況</span>
+                <strong>33%</strong>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 33%;"></div>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 12px;">
+            <button class="btn btn-primary" style="flex: 2;" onclick="loadView('proposal')">次のステップへ進む</button>
+            <button class="btn btn-secondary" style="flex: 1;" onclick="loadView('main-menu')">終了する</button>
+        </div>
+    </div>
+</div>

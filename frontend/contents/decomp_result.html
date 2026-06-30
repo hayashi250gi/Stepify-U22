@@ -1,0 +1,30 @@
+<div class="view-container">
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 class="card-title" style="margin-bottom: 0;">AI分解結果: <span id="parent-task-title-placeholder"></span></h2>
+            <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 14px;">⚙️ 締切・優先度設定</button>
+        </div>
+
+        <p style="color: var(--text-muted); margin-bottom: 20px;">以下のステップが生成されました。必要に応じて編集・追加が可能です。</p>
+
+        <div id="steps-list-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+            <div class="card" style="padding: 16px; background: #fafafa; display: flex; justify-content: space-between; align-items: center; margin: 0; border: 1px solid var(--border-color);">
+                <div><strong>1. 机の上のゴミをまとめる</strong> <span style="color: var(--text-muted); font-size: 14px;">(目安: 3分)</span></div>
+                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;">編集</button>
+            </div>
+            <div class="card" style="padding: 16px; background: #fafafa; display: flex; justify-content: space-between; align-items: center; margin: 0; border: 1px solid var(--border-color);">
+                <div><strong>2. 不要な書類をファイリングする</strong> <span style="color: var(--text-muted); font-size: 14px;">(目安: 7分)</span></div>
+                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;">編集</button>
+            </div>
+            <div class="card" style="padding: 16px; background: #fafafa; display: flex; justify-content: space-between; align-items: center; margin: 0; border: 1px solid var(--border-color);">
+                <div><strong>3. 床の掃除機がけを行う</strong> <span style="color: var(--text-muted); font-size: 14px;">(目安: 5分)</span></div>
+                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;">編集</button>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px;">
+            <button class="btn btn-secondary" onclick="loadView('main-menu')" style="flex: 1;">やり直す</button>
+            <button id="to-proposal-btn" class="btn btn-primary" style="flex: 2;">この内容で確定して進む</button>
+        </div>
+    </div>
+</div>
