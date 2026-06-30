@@ -1,0 +1,338 @@
+/* --- 全体リセット & 共通スタイル --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Helvetica Neue', Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+}
+
+body {
+    background-color: #f2f2f2;
+    color: #333;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* --- レイアウトコンテナ --- */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* ヘッダー */
+.main-header {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    padding: 15px 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+/* メインワークスペース */
+.workspace {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 60px);
+}
+
+/* --- サイドバー --- */
+.sidebar {
+    width: 250px;
+    background-color: #b3b3b3; /* 画像の薄いグレーを再現 */
+    border-right: 1px solid #999;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.nav-menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #222;
+    transition: background-color 0.2s;
+}
+
+.nav-item .icon {
+    margin-right: 12px;
+    font-size: 16px;
+}
+
+.nav-item:hover, .nav-item.active {
+    background-color: #999999;
+    color: #000;
+}
+
+/* --- メインコンテンツエリア --- */
+.main-content {
+    flex: 1;
+    background-color: #e6e6e6; /* 画像内のメインエリア背景 */
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* 画面切り替え表示制御 */
+.view-section {
+    display: none;
+}
+
+.view-section.active {
+    display: block;
+}
+
+.view-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.view-header h2 {
+    font-size: 24px;
+    color: #111;
+}
+
+/* --- カード・コンポーネント --- */
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* フォーム・コントロール */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-control-lg {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+/* ボタン */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+.btn-lg {
+    padding: 14px 28px;
+    font-size: 16px;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.btn-primary {
+    background-color: #1a1a1a;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #333;
+}
+
+.btn-secondary {
+    background-color: #ccc;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background-color: #bbb;
+}
+
+.btn-secondary-outline {
+    background-color: transparent;
+    border: 2px solid #333;
+    color: #333;
+}
+
+.btn-danger {
+    background-color: #d9534f;
+    color: white;
+}
+
+/* --- 特定画面用UI --- */
+/* タスク分解ステップ編集 */
+.step-edit-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.step-number {
+    font-weight: bold;
+    background: #333;
+    color: #fff;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 提案画面 */
+.proposal-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.proposal-label {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.proposal-task-title {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #111;
+}
+
+.proposal-meta {
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+.proposal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* タイマー画面 */
+.timer-display {
+    font-size: 72px;
+    font-weight: bold;
+    margin: 30px 0;
+    font-family: monospace;
+    letter-spacing: 2px;
+}
+
+/* データテーブル */
+.task-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.task-table th, .task-table td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.task-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.clickable-row {
+    cursor: pointer;
+}
+
+.clickable-row:hover {
+    background-color: #fafafa;
+}
+
+/* バッジ */
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge-success { background-color: #dff0d8; color: #3c763d; }
+.badge-warning { background-color: #fcf8e3; color: #8a6d3b; }
+.badge-secondary { background-color: #e1e1e1; color: #555; }
+
+/* プログレスバー */
+.progress-bar-bg {
+    background: #eee;
+    border-radius: 10px;
+    height: 16px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.progress-bar-fill {
+    background: #1a1a1a;
+    height: 100%;
+    transition: width 0.3s;
+}
+
+/* ステップ詳細表示 */
+.step-list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.step-view-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 6px;
+    gap: 15px;
+}
+
+.step-view-item.completed {
+    opacity: 0.6;
+}
+
+.step-view-item.completed .status-check {
+    color: green;
+    font-weight: bold;
+}
