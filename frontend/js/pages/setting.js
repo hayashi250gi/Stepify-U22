@@ -1,4 +1,4 @@
-export function renderSetting() {
+export function render() {
 
     console.log(
         "setting loaded"

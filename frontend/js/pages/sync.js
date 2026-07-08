@@ -1,4 +1,4 @@
-export function renderSync() {
+export function render() {
 
     console.log(
         "sync loaded"

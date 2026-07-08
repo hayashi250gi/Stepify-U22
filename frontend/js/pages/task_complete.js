@@ -1,4 +1,4 @@
-export function renderTaskComplete() {
+export function render() {
 
     console.log(
         "task complete loaded"

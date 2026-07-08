@@ -1,4 +1,4 @@
-export function renderTaskSuggestion() {
+export function render() {
 
     console.log(
         "task suggestion loaded"

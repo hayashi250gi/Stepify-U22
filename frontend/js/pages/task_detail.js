@@ -1,4 +1,4 @@
-export function renderTaskDetail() {
+export function render() {
 
     console.log(
         "task detail loaded"

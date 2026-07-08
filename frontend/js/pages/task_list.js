@@ -1,5 +1,5 @@
-export function renderTaskList() {
-
+export function render() {
+    
     console.log(
         "task list loaded"
     );

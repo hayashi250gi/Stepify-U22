@@ -1,4 +1,4 @@
-export function renderBreakdownResult() {
+export function render() {
 
     console.log(
         "result breakdown loaded"

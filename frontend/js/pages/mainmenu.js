@@ -1,4 +1,4 @@
-export function renderMainMenu() {
+export function render() {
 
     console.log(
         "mainmenu loaded"

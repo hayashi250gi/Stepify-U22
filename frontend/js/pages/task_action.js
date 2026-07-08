@@ -3,7 +3,7 @@ import {
     stopTimer
 } from "../timer.js";
 
-export function renderTaskAction() {
+export function render() {
 
     console.log(
         "task action loaded"
