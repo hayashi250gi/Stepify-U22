@@ -1,0 +1,34 @@
+"""各種設定を管理するモジュール"""
+
+import os
+
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
+class Config:
+    ## server
+    HOST = os.getenv("HOST", "0.0.0.0")
+    PORT = int(os.getenv("PORT", 8000))
+
+    ## PostgreSQL
+    DB_HOST = os.getenv("DB_HOST", "localhost")
+    DB_PORT = int(os.getenv("DB_PORT", 5432))
+    DB_USER = os.getenv("DB_USER", "stepify")
+    DB_PASSWORD = os.getenv("DB_PASSWORD", "password")
+    DB_NAME = os.getenv("DB_NAME", "stepify")
+
+    ## Gemini
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+    ## JWT
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+
+    ## OAuth
+    GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+    GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+    GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:3000")
+
+    ## Environment
+    ENV = os.getenv("ENV", "development")

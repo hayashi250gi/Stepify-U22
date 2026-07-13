@@ -2,15 +2,13 @@
 
 // ルーター初期化
 export function initializeRouter() {
-
     setupSidebarNavigation();
 
     navigate("mainmenu");
 }
 
 // ページ遷移処理
-async function navigate(pageName) {
-
+export async function navigate(pageName) {
     const response = await fetch(
         `contents/${pageName}.html`
     );

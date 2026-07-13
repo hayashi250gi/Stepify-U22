@@ -1,11 +1,11 @@
 <div class="view-container">
-    <div class="card" style="max-width: 500px; margin: 40px auto; text-align: center;">
+    <div class="card login-card">
         <h2 class="card-title">アカウントログイン・データ同期</h2>
-        <p style="color: var(--text-muted); margin-bottom: 24px;">
+        <p class="login-description">
             Googleアカウントと連携することで、サーバーへデータを安全に同期し、複数端末からアクセス可能になります。</p>
 
-        <div id="google-login-button" style="display: flex; justify-content: center; margin: 24px 0;"></div>
+        <div id="google-login-button" class="google-login-button"></div>
 
-        <button class="btn btn-secondary" style="width: 100%;" onclick="loadView('main-menu')">キャンセル</button>
+        <button id="login-cancel-btn" class="btn btn-secondary login-cancel-btn">キャンセル</button>
     </div>
 </div>

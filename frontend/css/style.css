@@ -83,10 +83,73 @@ body {
     padding: 0 20px;
 }
 
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-auth {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .logo {
     font-size: 20px;
     font-weight: bold;
     letter-spacing: 1px;
+}
+
+.auth-login-button {
+    padding: 8px 14px;
+    font-size: 14px;
+    background-color: var(--accent-color);
+    color: var(--text-inverse);
+}
+
+.auth-login-button:hover {
+    background-color: #7a00b6;
+}
+
+.auth-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.auth-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.auth-user-avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    font-size: 16px;
+}
+
+.auth-user-meta {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.auth-user-name {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.auth-user-email {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .sidebar-menu {
@@ -222,6 +285,18 @@ body {
     transition: width 0.3s ease;
 }
 
+.progress-bar-complete {
+    width: 33%;
+}
+
+.progress-bar-partial {
+    width: 33%;
+}
+
+.progress-bar-empty {
+    width: 0%;
+}
+
 /* タイマーデザイン */
 .timer-display {
     font-size: 64px;
@@ -230,6 +305,364 @@ body {
     font-family: monospace;
     margin: 30px 0;
     color: var(--text-primary);
+}
+
+/* ページ固有レイアウト */
+.mainmenu-view,
+.task-suggestion-view,
+.task-complete-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+}
+
+.mainmenu-card,
+.task-suggestion-card,
+.task-complete-card {
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    padding: 40px 24px;
+}
+
+.mainmenu-title,
+.task-suggestion-title,
+.task-complete-title {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.mainmenu-description,
+.task-suggestion-description,
+.task-complete-summary,
+.login-description,
+.task-detail-description,
+.result-breakdown-description {
+    color: var(--text-muted);
+    margin-bottom: 24px;
+}
+
+.mainmenu-submit-btn,
+.task-suggestion-start-btn,
+.task-complete-primary-btn {
+    width: 100%;
+    padding: 14px;
+}
+
+.mainmenu-history {
+    max-width: 600px;
+    margin: 24px auto 0;
+    width: 100%;
+}
+
+.mainmenu-history-title {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.mainmenu-history-card {
+    padding: 16px;
+}
+
+.mainmenu-history-text {
+    font-size: 14px;
+}
+
+.setting-card,
+.login-card,
+.howto-card,
+.result-breakdown-card {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.login-card {
+    max-width: 500px;
+    text-align: center;
+}
+
+.google-login-button {
+    display: flex;
+    justify-content: center;
+    margin: 24px 0;
+}
+
+.login-cancel-btn {
+    width: 100%;
+}
+
+.howto-card {
+    max-width: 700px;
+}
+
+.howto-content {
+    line-height: 1.6;
+    color: #444;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.howto-actions {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.task-suggestion-badge {
+    background: #e1f5fe;
+    color: var(--accent-color);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.task-suggestion-actions,
+.task-complete-actions,
+.task-detail-actions,
+.result-breakdown-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.task-suggestion-action-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.task-suggestion-secondary-btn,
+.task-complete-secondary-btn,
+.result-breakdown-retry-btn {
+    flex: 1;
+}
+
+.task-complete-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.task-complete-progress-card {
+    background-color: #fafafa;
+    border: 1px solid var(--border-color);
+    padding: 16px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.task-complete-progress-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.task-action-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+}
+
+.task-action-card {
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    padding: 40px 24px;
+}
+
+.task-action-caption {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.task-action-title {
+    font-size: 24px;
+    margin-top: 8px;
+}
+
+.task-action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.task-action-complete-btn {
+    background-color: #4caf50;
+    padding: 16px;
+}
+
+.task-progress-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.task-progress-container {
+    width: 80px;
+}
+
+.task-status {
+    font-weight: 600;
+}
+
+.task-status-progress {
+    color: #ff9800;
+}
+
+.task-status-pending {
+    color: var(--text-muted);
+}
+
+.task-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.task-list-title {
+    margin: 0;
+}
+
+.task-list-create-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+.task-list-card {
+    padding: 0;
+    overflow-x: auto;
+}
+
+.task-detail-back-row {
+    margin-bottom: 16px;
+}
+
+.task-detail-back-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.task-detail-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task-detail-item {
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+}
+
+.task-detail-item-complete {
+    background: #f9f9f9;
+}
+
+.task-detail-item-status {
+    color: #ff9800;
+}
+
+.task-detail-item-status-complete {
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.task-detail-delete-btn {
+    color: #d32f2f;
+}
+
+.result-breakdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.result-breakdown-title {
+    margin-bottom: 0;
+}
+
+.result-breakdown-settings-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.result-breakdown-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.result-breakdown-step-card {
+    padding: 16px;
+    background: #fafafa;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 0;
+    border: 1px solid var(--border-color);
+}
+
+.result-breakdown-step-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.result-breakdown-step-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.result-breakdown-step-time {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.result-breakdown-step-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 14px;
+}
+
+.result-breakdown-step-meta label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: var(--text-muted);
+}
+
+.result-breakdown-step-meta input,
+.result-breakdown-step-meta select {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 6px 8px;
+}
+
+.result-breakdown-step-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+.result-breakdown-confirm-btn {
+    flex: 2;
 }
 
 /* モバイルメニュー用トグルボタン */

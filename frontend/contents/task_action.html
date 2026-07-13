@@ -1,13 +1,13 @@
-<div class="view-container" style="display: flex; align-items: center; justify-content: center; min-height: 70vh;">
-    <div class="card" style="max-width: 500px; width: 100%; text-align: center; padding: 40px 24px;">
-        <p style="color: var(--text-muted); font-size: 14px;">タスクを実行中...</p>
-        <h2 style="font-size: 24px; margin-top: 8px;">机の上のゴミをまとめる</h2>
-        
+<div class="view-container task-action-view">
+    <div class="card task-action-card">
+        <p class="task-action-caption">タスクを実行中...</p>
+        <h2 class="task-action-title">机の上のゴミをまとめる</h2>
+
         <div id="timer-display" class="timer-display">15:00</div>
-        
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-            <button id="complete-task-btn" class="btn btn-primary" style="background-color: #4caf50; padding: 16px;">完了した！</button>
-            <button class="btn btn-secondary" onclick="loadView('main-menu')">中断する</button>
+
+        <div class="task-action-buttons">
+            <button id="complete-task-btn" class="btn btn-primary task-action-complete-btn">完了した！</button>
+            <button id="cancel-action-btn" class="btn btn-secondary">中断する</button>
         </div>
     </div>
 </div>

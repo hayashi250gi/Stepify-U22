@@ -1,16 +1,21 @@
 export function render() {
+    const summary = document.getElementById("task-complete-summary");
+    const nextButton = document.getElementById("next-step-btn");
+    const finishButton = document.getElementById("finish-step-btn");
 
-    console.log(
-        "task complete loaded"
-    );
+    if (summary) {
+        summary.textContent = "タスクを完了しました。次の一歩として、次のタスクを確認できます。";
+    }
 
-    /*
-    今後実装予定:
+    if (nextButton) {
+        nextButton.addEventListener("click", () => {
+            window.navigate?.("task_suggestion");
+        });
+    }
 
-    - 実行結果保存
-    - 実績表示
-
-    backend:
-    POST /api/task-complete
-    */
+    if (finishButton) {
+        finishButton.addEventListener("click", () => {
+            window.navigate?.("mainmenu");
+        });
+    }
 }

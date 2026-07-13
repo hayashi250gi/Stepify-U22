@@ -1,10 +1,21 @@
+import { setLoginUser } from "../state.js";
+import { renderAuthStatus } from "../layout.js";
+import { loginWithBackend } from "../api.js";
+
 export function render() {
     const clientId = '532692673300-p828sccd84dkpcdkbijme799ujit1so0.apps.googleusercontent.com';
     const buttonContainer = document.getElementById('google-login-button');
+    const cancelButton = document.getElementById('login-cancel-btn');
+
+    if (cancelButton) {
+        cancelButton.addEventListener('click', () => {
+            window.navigate?.('mainmenu');
+        });
+    }
 
 
     // Google Sign-Inのコールバック関数
-    function handleCredentialResponse(response) {
+async function handleCredentialResponse(response) {
         console.log('Google Sign-In response:', response);
 
         // JWTをデコードしてユーザー情報を取得  
@@ -17,8 +28,24 @@ export function render() {
         console.log("  Profile image URL: " + responsePayload.picture);
         console.log("  Email: " + responsePayload.email);
 
-        // ここでサーバーにトークンを送信して認証処理を行う
-        // 例: fetch('/api/auth/google', { method: 'POST', body: JSON.stringify({ token: response.credential }) })
+        const user = {
+            name: responsePayload.name,
+            email: responsePayload.email,
+            picture: responsePayload.picture,
+            sub: responsePayload.sub
+        };
+
+        try {
+            const backendResult = await loginWithBackend(response.credential, user, 'dev-client-secret');
+            console.log("Backend login result:", backendResult);
+
+            if (backendResult.success) {
+                setLoginUser(backendResult.user);
+                renderAuthStatus();
+            }
+        } catch (error) {
+            console.error("Backend login failed:", error);
+        }
     }
 
     // Google Sign-Inの初期化

@@ -1,16 +1,23 @@
 export function render() {
+    const startButton = document.getElementById("start-execution-btn");
+    const skipButton = document.getElementById("skip-task-btn");
+    const cancelButton = document.getElementById("cancel-task-btn");
 
-    console.log(
-        "task suggestion loaded"
-    );
+    if (startButton) {
+        startButton.addEventListener("click", () => {
+            window.navigate?.("task_action");
+        });
+    }
 
-    /*
-    今後実装予定:
+    if (skipButton) {
+        skipButton.addEventListener("click", () => {
+            alert("タスクをスキップし、次の候補を再選定します。");
+        });
+    }
 
-    - 実行候補提案
-    - 優先順位表示
-
-    backend:
-    POST /api/task-suggestion
-    */
+    if (cancelButton) {
+        cancelButton.addEventListener("click", () => {
+            window.navigate?.("mainmenu");
+        });
+    }
 }

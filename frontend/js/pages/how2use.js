@@ -1,6 +1,10 @@
-export function renderHow2Use() {
+export function render() {
+    const startButton = document.getElementById("start-using-btn");
 
-    console.log(
-        "how2use loaded"
-    );
+    // クリックイベントリスナーを設定
+    if (startButton) {
+        startButton.addEventListener("click", () => {
+            window.navigate?.("mainmenu");
+        });
+    }
 }

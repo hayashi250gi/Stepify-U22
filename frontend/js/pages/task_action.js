@@ -52,4 +52,19 @@ export function render() {
             }
         );
     }
+
+    const completeButton = document.getElementById("complete-task-btn");
+    const cancelButton = document.getElementById("cancel-action-btn");
+
+    if (completeButton) {
+        completeButton.addEventListener("click", () => {
+            window.navigate?.("task_complete");
+        });
+    }
+
+    if (cancelButton) {
+        cancelButton.addEventListener("click", () => {
+            window.navigate?.("mainmenu");
+        });
+    }
 }

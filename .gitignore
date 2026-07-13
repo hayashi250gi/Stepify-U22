@@ -3,6 +3,8 @@ __pycache__/
 
 .env
 
+backend/.env
+
 node_modules/
 
 .vscode/

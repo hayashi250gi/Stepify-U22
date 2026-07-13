@@ -1,10 +1,36 @@
 // API呼び出しモジュール
 
-export async function requestHello() {
+export async function loginWithBackend(token, user, clientSecret) {
+    const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, user, clientSecret })
+    });
 
-    const response = await fetch(
-        "/api/hello"
-    );
+    return await response.json();
+}
+
+export async function fetchTasks() {
+    const response = await fetch("/api/tasks");
+    return await response.json();
+}
+
+export async function decomposeTask(title) {
+    const response = await fetch("/api/tasks/decompose", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title })
+    });
+
+    return await response.json();
+}
+
+export async function createTask(title, steps = []) {
+    const response = await fetch("/api/tasks/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, steps })
+    });
 
     return await response.json();
 }

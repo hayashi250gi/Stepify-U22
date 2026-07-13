@@ -1,61 +1,19 @@
-from http.server import HTTPServer, BaseHTTPRequestHandler
-import json
-import psycopg2
+from database.database import Database
+from database.schema_initializer import SchemaInitializer
+
+from server.server import run
 
 
-def check_db():
+def main():
 
-    connection = psycopg2.connect(
-        host="db",
-        dbname="stepify",
-        user="stepify",
-        password="password"
-    )
+    Database.create_pool()
+    SchemaInitializer.create_schema()
 
-    cursor = connection.cursor()
-
-    cursor.execute("SELECT 1;")
-
-    result = cursor.fetchone()
-
-    connection.close()
-
-    return result[0]
+    try:
+        run()
+    finally:
+        Database.close_pool()
 
 
-class Handler(BaseHTTPRequestHandler):
-
-    def do_GET(self):
-
-        if self.path == "/api/hello":
-
-            db_result = check_db()
-
-            data = {
-                "message": "backend ok",
-                "db": db_result
-            }
-
-            self.send_response(200)
-
-            self.send_header(
-                "Content-Type",
-                "application/json"
-            )
-
-            self.end_headers()
-
-            self.wfile.write(
-                json.dumps(data).encode()
-            )
-
-            return
-
-        self.send_response(404)
-        self.end_headers()
-
-
-HTTPServer(
-    ("0.0.0.0", 8000),
-    Handler
-).serve_forever()
+if __name__ == "__main__":
+    main()

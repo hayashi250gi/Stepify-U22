@@ -1,18 +1,10 @@
 export function render() {
+    const saveButton = document.getElementById("save-settings-btn");
 
-    console.log(
-        "setting loaded"
-    );
-
-    /*
-    今後実装予定:
-
-    - 設定保存
-    - テーマ変更
-    - 通知設定
-
-    backend:
-    GET /api/settings
-    PUT /api/settings
-    */
+    if (saveButton) {
+        saveButton.addEventListener("click", () => {
+            alert("設定を保存しました（フロントエンド擬似処理）");
+            window.navigate?.("mainmenu");
+        });
+    }
 }
