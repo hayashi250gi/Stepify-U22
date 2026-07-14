@@ -10,25 +10,24 @@ class SchemaInitializer:
 
     @staticmethod
     def create_schema():
-        """schema.sqlを実行してデータベースのスキーマを作成する。"""
 
-        schema_path = (
-            Path(__file__)
-            .parent.parent
-            / "sql"
-            / "schema.sql"
-        )
+        connection = Database.get_connection()
 
-        sql = schema_path.read_text(
-            encoding="utf-8"
-        )
+        try:
 
-        with Database.get_connection() as connection:
+            sql_file = (
+                Path(__file__)
+                .parent
+                .joinpath("schema.sql")
+            )
+
+            with open(sql_file, "r", encoding="utf-8") as file:
+                sql = file.read()
 
             with connection.cursor() as cursor:
-
                 cursor.execute(sql)
 
             connection.commit()
 
-        print("Database initialized.")
+        finally:
+            connection.close()
