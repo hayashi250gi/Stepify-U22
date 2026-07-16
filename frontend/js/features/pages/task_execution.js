@@ -1,7 +1,4 @@
-import {
-    startTimer,
-    stopTimer
-} from "../timer.js";
+// タスク実行ページ
 
 export function render() {
 

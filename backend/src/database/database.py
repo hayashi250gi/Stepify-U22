@@ -44,13 +44,18 @@ class Database:
 
     @classmethod
     def get_connection(cls):
-        """接続を取得する。接続プールが初期化されていない場合は例外を発生させる。"""
+        """
+        接続を取得するためのコンテキストマネージャを返す。
+        
+        呼び出し側は必ず `with Database.get_connection() as conn:` の形式で使用。
+        """
 
         if cls._pool is None:
             raise RuntimeError(
                 "Database has not been initialized."
             )
 
+        # コンテキストマネージャオブジェクトを返します
         return cls._pool.connection()
 
     @classmethod

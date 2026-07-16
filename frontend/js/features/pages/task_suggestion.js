@@ -1,3 +1,5 @@
+// タスク提案ページ
+
 export function render() {
     const startButton = document.getElementById("start-execution-btn");
     const skipButton = document.getElementById("skip-task-btn");

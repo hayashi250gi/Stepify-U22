@@ -1,3 +1,5 @@
+// タスク分解結果ページ
+
 import { createTask } from "../api.js";
 import { appState } from "../state.js";
 

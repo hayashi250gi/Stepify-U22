@@ -1,14 +1,11 @@
-CREATE TABLE users (
+-- ユーザーテーブル
+CREATE TABLE IF NOT EXISTS users (
 
     user_id SERIAL PRIMARY KEY,
 
     google_sub VARCHAR(255) UNIQUE,
 
-    email VARCHAR(255) UNIQUE NOT NULL,
-
     display_name VARCHAR(100) NOT NULL,
-
-    icon_url TEXT,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -18,9 +15,12 @@ CREATE TABLE users (
 
 );
 
+-- タスクテーブル
 CREATE TABLE IF NOT EXISTS tasks (
 
     task_id SERIAL PRIMARY KEY,
+
+    client_uuid UUID NOT NULL UNIQUE,
 
     user_id INTEGER NOT NULL
         REFERENCES users(user_id)
@@ -32,14 +32,13 @@ CREATE TABLE IF NOT EXISTS tasks (
 
     status VARCHAR(20) NOT NULL DEFAULT 'todo',
 
-    client_uuid UUID NOT NULL UNIQUE,
-
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
 );
 
+-- サブタスクテーブル
 CREATE TABLE IF NOT EXISTS subtasks (
 
     subtask_id SERIAL PRIMARY KEY,
@@ -62,6 +61,49 @@ CREATE TABLE IF NOT EXISTS subtasks (
         NOT NULL DEFAULT 'todo',
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);
+
+-- 実行ログテーブル
+CREATE TABLE IF NOT EXISTS execution_logs (
+
+    execution_log_id SERIAL PRIMARY KEY,
+
+    subtask_id INTEGER NOT NULL
+        REFERENCES subtasks(subtask_id)
+        ON DELETE CASCADE,
+
+    started_at TIMESTAMP NOT NULL,
+
+    finished_at TIMESTAMP,
+
+    duration_seconds INTEGER,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);
+
+CREATE TABLE IF NOT EXISTS settings (
+
+    user_id INTEGER PRIMARY KEY
+        REFERENCES users(user_id)
+        ON DELETE CASCADE,
+
+    settings JSONB NOT NULL DEFAULT '{
+        "appearance": {
+            "theme": "system"
+        },
+        "notification": {
+            "enabled": true,
+            "sound": true
+        },
+        "sync": {
+            "auto_sync": true,
+            "sync_only_wifi": false
+        }
+    }'::jsonb,
 
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 

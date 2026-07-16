@@ -11,23 +11,17 @@ class SchemaInitializer:
     @staticmethod
     def create_schema():
 
-        connection = Database.get_connection()
+        with Database.get_connection() as connection:
 
-        try:
-
-            sql_file = (
-                Path(__file__)
-                .parent
-                .joinpath("schema.sql")
-            )
+            sql_file = "/app/src/database/sql/schema.sql"
 
             with open(sql_file, "r", encoding="utf-8") as file:
                 sql = file.read()
 
             with connection.cursor() as cursor:
                 cursor.execute(sql)
-
+            
+            # withブロックを抜ける際、またはブロック内で明示的にコミットする
             connection.commit()
-
-        finally:
-            connection.close()
+            
+        # with ブロックを抜けた時点で、接続は自動的にプールへ返却（リリース）される

@@ -4,20 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script src="https://accounts.google.com/gsi/client" async></script>
-
     <title>Stepify - 行動開始支援アプリケーション</title>
+
     <link rel="stylesheet" href="./css/style.css">
-    <script type="module" src="./js/main.js" defer></script>
+    
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script type="module" src="./js/main.js"></script>
+
 </head>
 <body>
     <div id="app-container">
-        <header id="header-viewport"></header>
+        <header id="header-viewport">
+            <!-- ヘッダー要素 -->
+        </header>
         
         <div id="main-layout">
-            <aside id="sidebar-viewport"></aside>
+            <aside id="sidebar-viewport">
+                <!-- サイドバー要素 -->
+            </aside>
             
-            <main id="content-viewport"></main>
+            <main id="content-viewport">
+                <!-- ページ別コンテンツ要素 -->
+                 <div id="google-signin-button"></div>
+            </main>
         </div>
     </div>
     

@@ -1,14 +1,23 @@
-// メインモジュール 画面要素のロード機能を呼び出し
+// 最初に読み込まれるJSファイル
 
-import { loadLayout } from "./layout.js";
-import { initializeRouter } from "./router.js";
+import { Config } from "./config.js";
+import { Header } from "./features/components/header.js";
+import { Sidebar } from "./features/components/sidebar.js";
+import { Router } from "./features/router/router.js";
+import { GoogleAuth } from "./features/auth/google_auth.js";
 
-// アプリケーションの初期化処理
-async function bootstrap() {
+window.addEventListener("DOMContentLoaded", async () => {
 
-    await loadLayout();
+    // 設定を初期化
+    await Config.initialize();
+    // 認証状態を初期化
+    await GoogleAuth.initialize();
 
-    initializeRouter();
-}
+    // ヘッダーとサイドバーを表示
+    await Header.initialize();
+    await Sidebar.initialize();
 
-bootstrap();
+    // ルーターを初期化
+    Router.initialize();
+
+});

@@ -1,3 +1,5 @@
+//　設定ページ
+
 export function render() {
     const saveButton = document.getElementById("save-settings-btn");
 

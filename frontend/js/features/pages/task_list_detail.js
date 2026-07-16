@@ -1,3 +1,5 @@
+// タスク詳細ページ
+
 export function render() {
     const titlePlaceholder = document.getElementById("detail-task-title-placeholder");
     const detailList = document.getElementById("detail-task-list");

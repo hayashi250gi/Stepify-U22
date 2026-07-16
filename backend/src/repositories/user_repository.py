@@ -1,0 +1,208 @@
+"""ユーザーに関するデータベース操作を提供する"""
+
+from database.database import Database
+
+
+class UserRepository:
+
+    @staticmethod
+    def create_user(google_sub: str, display_name: str) -> int:
+        """
+        ユーザーを新規作成し、user_idを返す
+        """
+
+        connection = Database.get_connection()
+
+        try:
+            with connection.cursor() as cursor:
+
+                cursor.execute(
+                    """
+                    INSERT INTO users (
+                        google_sub,
+                        display_name
+                    )
+                    VALUES (%s, %s)
+                    RETURNING user_id;
+                    """,
+                    (
+                        google_sub,
+                        display_name,
+                    ),
+                )
+
+                user_id = cursor.fetchone()[0]
+                connection.commit()
+
+                return user_id
+
+        finally:
+            connection.close()
+
+    @staticmethod
+    def get_user(user_id: int) -> dict | None:
+        """
+        user_idからユーザー取得
+        """
+
+        connection = Database.get_connection()
+
+        try:
+            with connection.cursor() as cursor:
+
+                cursor.execute(
+                    """
+                    SELECT
+                        user_id,
+                        google_sub,
+                        display_name,
+                        created_at,
+                        updated_at,
+                        last_login_at
+                    FROM users
+                    WHERE user_id = %s;
+                    """,
+                    (user_id,),
+                )
+
+                row = cursor.fetchone()
+
+                if row is None:
+                    return None
+
+                return {
+                    "user_id": row[0],
+                    "google_sub": row[1],
+                    "display_name": row[2],
+                    "created_at": row[3],
+                    "updated_at": row[4],
+                    "last_login_at": row[5],
+                }
+
+        finally:
+            connection.close()
+
+    @staticmethod
+    def get_user_by_google_sub(google_sub: str) -> dict | None:
+        """
+        Googleログイン用
+        """
+
+        connection = Database.get_connection()
+
+        try:
+            with connection.cursor() as cursor:
+
+                cursor.execute(
+                    """
+                    SELECT
+                        user_id,
+                        google_sub,
+                        display_name,
+                        created_at,
+                        updated_at,
+                        last_login_at
+                    FROM users
+                    WHERE google_sub = %s;
+                    """,
+                    (google_sub,),
+                )
+
+                row = cursor.fetchone()
+
+                if row is None:
+                    return None
+
+                return {
+                    "user_id": row[0],
+                    "google_sub": row[1],
+                    "display_name": row[2],
+                    "created_at": row[3],
+                    "updated_at": row[4],
+                    "last_login_at": row[5],
+                }
+
+        finally:
+            connection.close()
+
+    @staticmethod
+    def update_last_login(user_id: int) -> None:
+        """
+        最終ログイン日時更新
+        """
+
+        connection = Database.get_connection()
+
+        try:
+            with connection.cursor() as cursor:
+
+                cursor.execute(
+                    """
+                    UPDATE users
+                    SET
+                        last_login_at = CURRENT_TIMESTAMP,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE user_id = %s;
+                    """,
+                    (user_id,),
+                )
+
+                connection.commit()
+
+        finally:
+            connection.close()
+
+    @staticmethod
+    def update_display_name(user_id: int, display_name: str) -> None:
+        """
+        表示名を更新する
+        """
+
+        connection = Database.get_connection()
+
+        try:
+            with connection.cursor() as cursor:
+
+                cursor.execute(
+                    """
+                    UPDATE users
+                    SET
+                        display_name = %s,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE user_id = %s;
+                    """,
+                    (
+                        display_name,
+                        user_id,
+                    ),
+                )
+
+                connection.commit()
+
+        finally:
+            connection.close()
+
+
+    @staticmethod
+    def delete_user(user_id: int) -> None:
+        """
+        ユーザーを削除する
+        """
+
+        connection = Database.get_connection()
+
+        try:
+            with connection.cursor() as cursor:
+
+                cursor.execute(
+                    """
+                    DELETE FROM users
+                    WHERE user_id = %s;
+                    """,
+                    (user_id,),
+                )
+
+                connection.commit()
+
+        finally:
+            connection.close()

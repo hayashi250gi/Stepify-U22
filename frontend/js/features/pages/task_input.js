@@ -1,3 +1,5 @@
+// 分解タスク入力ページ（メインページ）
+
 import { decomposeTask } from "../api.js";
 import { decompositionResult } from "../state.js";
 

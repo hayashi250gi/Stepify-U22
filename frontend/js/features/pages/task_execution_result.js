@@ -1,3 +1,5 @@
+// タスク実行結果ページ
+
 export function render() {
     const summary = document.getElementById("task-complete-summary");
     const nextButton = document.getElementById("next-step-btn");
