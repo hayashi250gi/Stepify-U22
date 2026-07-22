@@ -5,7 +5,7 @@ from server.server import run
 
 
 def main():
-
+    
     Database.create_pool()
     SchemaInitializer.create_schema()
 
@@ -13,7 +13,7 @@ def main():
         run()
     finally:
         Database.close_pool()
-
+    
 
 if __name__ == "__main__":
     main()

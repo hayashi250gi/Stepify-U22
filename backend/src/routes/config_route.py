@@ -1,7 +1,7 @@
 import json
 
 from services.config_service import ConfigService
-
+from utils.response import Response
 
 class ConfigRoute:
 
@@ -10,13 +10,8 @@ class ConfigRoute:
 
         config = ConfigService.get_public_config()
 
-        handler.send_response(200)
-        handler.send_header(
-            "Content-Type",
-            "application/json"
-        )
-        handler.end_headers()
-
-        handler.wfile.write(
-            json.dumps(config).encode()
-        )
+        Response.json(
+                handler,
+                200,
+                config
+            )

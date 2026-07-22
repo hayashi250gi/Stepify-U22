@@ -9,18 +9,8 @@ class UserService:
         display_name: str,
     ) -> int:
         """
-        ユーザーを新規作成する
-        google_sub: GoogleアカウントID
-        display_name: 表示名
+        ユーザーを新規登録する
         """
-
-        display_name = display_name.strip()
-
-        if not display_name:
-            raise ValueError("display_name is required.")
-
-        if len(display_name) > 100:
-            raise ValueError("display_name must be 100 characters or less.")
 
         return UserRepository.create_user(
             google_sub=google_sub,
@@ -30,7 +20,7 @@ class UserService:
     @staticmethod
     def get_user(user_id: int) -> dict | None:
         """
-        user_idからユーザーを取得する
+        ユーザーIDから取得する
         """
 
         return UserRepository.get_user(user_id)
@@ -40,7 +30,7 @@ class UserService:
         google_sub: str,
     ) -> dict | None:
         """
-        GoogleアカウントIDからユーザーを取得する
+        Googleアカウントから取得する
         """
 
         return UserRepository.get_user_by_google_sub(
@@ -48,39 +38,57 @@ class UserService:
         )
 
     @staticmethod
+    def list_users() -> list:
+        """
+        全ユーザーを取得する
+        """
+
+        return UserRepository.list_users()
+
+    @staticmethod
     def update_display_name(
         user_id: int,
         display_name: str,
-    ) -> None:
+    ) -> bool:
         """
-        表示名を更新する
+        表示名を変更する
         """
 
         display_name = display_name.strip()
 
-        if not display_name:
-            raise ValueError("display_name cannot be empty.")
+        if len(display_name) == 0:
+            raise ValueError(
+                "Display name is required."
+            )
 
         if len(display_name) > 100:
-            raise ValueError("display_name must be 100 characters or less.")
+            raise ValueError(
+                "Display name must be 100 characters or less."
+            )
 
-        UserRepository.update_display_name(
+        return UserRepository.update_display_name(
             user_id=user_id,
             display_name=display_name,
         )
 
     @staticmethod
-    def update_last_login(user_id: int) -> None:
+    def update_last_login(
+        user_id: int,
+    ) -> bool:
         """
         最終ログイン日時を更新する
         """
 
-        UserRepository.update_last_login(user_id)
+        return UserRepository.update_last_login(
+            user_id
+        )
 
     @staticmethod
-    def delete_user(user_id: int) -> None:
+    def delete_user(user_id: int) -> bool:
         """
         ユーザーを削除する
         """
 
-        UserRepository.delete_user(user_id)
+        return UserRepository.delete_user(
+            user_id
+        )

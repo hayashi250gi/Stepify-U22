@@ -85,12 +85,18 @@ CREATE TABLE IF NOT EXISTS execution_logs (
 
 );
 
+-- 設定テーブル
 CREATE TABLE IF NOT EXISTS settings (
 
     user_id INTEGER PRIMARY KEY
         REFERENCES users(user_id)
         ON DELETE CASCADE,
 
+    -- apperance.thema: system, light, dark
+    -- notification.enabled: true, false
+    -- notification.sound: true, false
+    -- sync.auto_sync: true, false
+    -- sync.sync_only_wifi: true, false
     settings JSONB NOT NULL DEFAULT '{
         "appearance": {
             "theme": "system"

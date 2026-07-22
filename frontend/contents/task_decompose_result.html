@@ -1,11 +1,14 @@
 <div class="view-container">
     <div class="card result-breakdown-card">
         <div class="result-breakdown-header">
-            <h2 class="card-title result-breakdown-title">AI分解結果: <span id="parent-task-title-placeholder"></span></h2>
+            <div class="result-breakdown-title-area">
+                <input id="parent-task-title-input" class="parent-task-title-input" placeholder="タスクタイトルを入力" />
+                <textarea id="parent-task-detail-input" class="parent-task-detail-input" placeholder="タスクの詳細（任意）"></textarea>
+            </div>
             <button id="edit-deadline-btn" class="btn btn-secondary result-breakdown-settings-btn">⚙️ 締切・優先度設定</button>
         </div>
 
-        <p class="result-breakdown-description">以下のステップが生成されました。必要に応じて編集・追加が可能です。</p>
+        <p class="result-breakdown-description">以下のステップが生成されました。タイトル・サブタスクは画面内で直接編集できます。ドラッグで順番を並べ替えてください。</p>
 
         <div id="steps-list-container" class="result-breakdown-list"></div>
 

@@ -3,6 +3,7 @@
 import json
 
 from services.task_service import TaskService
+from utils.response import Response
 
 
 class TaskRoute:
@@ -14,28 +15,21 @@ class TaskRoute:
 
         ## taskが存在しない場合の処理
         if task is None:
-            handler.send_response(404)
-            handler.send_header("Content-Type", "application/json")
-            handler.end_headers()
-
-            handler.wfile.write(
-                json.dumps({
-                    "message": "Task not found"
-                }).encode("utf-8")
+            Response.json(
+                handler,
+                404,
+                {
+                    "message": "Task not found."
+                }
             )
 
             return
 
         ## taskが存在する場合の処理
-        handler.send_response(200)
-        handler.send_header(
-            "Content-Type",
-            "application/json"
-        )
-        handler.end_headers()
-
-        handler.wfile.write(
-            json.dumps(task).encode("utf-8")
+        Response.json(
+            handler,
+            200,
+            task
         )
 
     @staticmethod
@@ -56,37 +50,33 @@ class TaskRoute:
             # 認証実装後はJWTから取得する
             user_id = 1
 
+            description = data.get("description")
+            subtasks = data.get("subtasks", [])
+
             task_id = TaskService.create_task(
                 user_id=user_id,
-                title=data["title"]
+                title=data["title"],
+                description=description,
+                subtasks=subtasks
             )
 
-            handler.send_response(201)
-            handler.send_header(
-                "Content-Type",
-                "application/json"
-            )
-            handler.end_headers()
-
-            handler.wfile.write(
-                json.dumps({
-                    "task_id": task_id
-                }).encode("utf-8")
+            Response.json(
+                handler,
+                200,
+                {
+                    "task_id": task_id,
+                    "message": "Task created."
+                }
             )
 
         except ValueError as e:
 
-            handler.send_response(400)
-            handler.send_header(
-                "Content-Type",
-                "application/json"
-            )
-            handler.end_headers()
-
-            handler.wfile.write(
-                json.dumps({
+            Response.json(
+                handler,
+                400,
+                {
                     "message": str(e)
-                }).encode("utf-8")
+                }
             )
 
     @staticmethod
@@ -114,63 +104,43 @@ class TaskRoute:
 
             if updated_task_id is None:
 
-                handler.send_response(404)
-                handler.send_header(
-                    "Content-Type",
-                    "application/json"
-                )
-                handler.end_headers()
-
-                handler.wfile.write(
-                    json.dumps({
-                        "message": "Task not found"
-                    }).encode("utf-8")
+                Response.json(
+                    handler,
+                    400,
+                    {
+                        "message": "Task not found."
+                    }
                 )
 
                 return
 
-            handler.send_response(200)
-            handler.send_header(
-                "Content-Type",
-                "application/json"
-            )
-            handler.end_headers()
-
-            handler.wfile.write(
-                json.dumps({
+            Response.json(
+                handler,
+                200,
+                {
                     "task_id": updated_task_id,
                     "message": "Task updated."
-                }).encode("utf-8")
+                }
             )
 
         except ValueError as e:
 
-            handler.send_response(400)
-            handler.send_header(
-                "Content-Type",
-                "application/json"
-            )
-            handler.end_headers()
-
-            handler.wfile.write(
-                json.dumps({
+            Response.json(
+                handler,
+                400,
+                {
                     "message": str(e)
-                }).encode("utf-8")
+                }
             )
 
         except PermissionError as e:
 
-            handler.send_response(403)
-            handler.send_header(
-                "Content-Type",
-                "application/json"
-            )
-            handler.end_headers()
-
-            handler.wfile.write(
-                json.dumps({
+            Response.json(
+                handler,
+                400,
+                {
                     "message": str(e)
-                }).encode("utf-8")
+                }
             )
 
     @staticmethod
@@ -190,48 +160,33 @@ class TaskRoute:
 
             if deleted_task_id is None:
 
-                handler.send_response(404)
-                handler.send_header(
-                    "Content-Type",
-                    "application/json"
-                )
-                handler.end_headers()
-
-                handler.wfile.write(
-                    json.dumps({
-                        "message": "Task not found"
-                    }).encode()
+                Response.json(
+                    handler,
+                    400,
+                    {
+                        "message": "Task not found."
+                    }
                 )
 
                 return
 
-            handler.send_response(200)
-            handler.send_header(
-                "Content-Type",
-                "application/json"
-            )
-            handler.end_headers()
-
-            handler.wfile.write(
-                json.dumps({
+            Response.json(
+                handler,
+                200,
+                {
                     "task_id": deleted_task_id,
                     "message": "Task deleted."
-                }).encode()
+                }
             )
-
+                    
         except PermissionError as e:
 
-            handler.send_response(403)
-            handler.send_header(
-                "Content-Type",
-                "application/json"
-            )
-            handler.end_headers()
-
-            handler.wfile.write(
-                json.dumps({
+            Response.json(
+                handler,
+                400,
+                {
                     "message": str(e)
-                }).encode()
+                }
             )
 
 
@@ -240,13 +195,10 @@ class TaskRoute:
 
         tasks = TaskService.list_tasks()
 
-        handler.send_response(200)
-        handler.send_header(
-            "Content-Type",
-            "application/json"
-        )
-        handler.end_headers()
-
-        handler.wfile.write(
-            json.dumps(tasks).encode("utf-8")
-        )
+        Response.json(
+                handler,
+                200,
+                {
+                    "tasks": tasks
+                }
+            )

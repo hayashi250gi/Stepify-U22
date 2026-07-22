@@ -1,55 +1,21 @@
-// 画面表示モジュール
+// URL 操作ユーティリティ。
+// SPA用のページ遷移は廃止し、window.location.href による画面遷移に統一する。
 
 export class Router {
 
-    // ルーター初期化
-    static initialize() {
-        Router.setupSidebarNavigation();
-
-        Router.navigate("task_input");
+    /**
+     * 現在のURLのクエリパラメータを URLSearchParams として返す。
+     * @returns {URLSearchParams}
+     */
+    static getQueryParams() {
+        return new URLSearchParams(window.location.search);
     }
 
-    // ページ遷移処理
-    static async navigate(pageName) {
-        const response = await fetch(
-            `contents/${pageName}.html`
-        );
-
-        const html = await response.text();
-
-        document.getElementById("content-viewport")
-            .innerHTML = html;
-
-        try {
-            const page = await import(`../pages/${pageName}.js`);
-
-            if (page.render) {
-                page.render();
-            }
-        } catch (err) {
-            console.error(`${pageName}.js がありません`, err);
-        }
-    }
-
-    // サイドバーのナビゲーションボタンのクリックイベントを設定
-    static setupSidebarNavigation() {
-
-        const sidebar =
-            document.getElementById("sidebar-viewport");
-
-        sidebar.addEventListener("click", (event) => {
-
-            const button =
-                event.target.closest("[data-view]");
-
-            if (!button) {
-                return;
-            }
-
-            const pageName =
-                button.dataset.view;
-
-            Router.navigate(pageName);
-        });
+    /**
+     * 指定したページへ遷移する。
+     * @param {string} pageName - "task_list" など（.html は自動補完）
+     */
+    static navigate(pageName) {
+        window.location.href = `/${pageName}.html`;
     }
 }

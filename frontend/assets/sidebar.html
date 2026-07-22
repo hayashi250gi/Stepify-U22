@@ -6,3 +6,21 @@
     <div class="menu-item" data-view="setting">⚙️ アプリ設定</div>
     <div class="menu-item" data-view="login">👤 ログイン・同期</div>
 </nav>
+
+<div id="sidebar-account-card" class="sidebar-account-card" hidden></div>
+
+<div id="sidebar-user-popup" class="sidebar-user-popup" hidden>
+    <button class="sidebar-popup-action" data-action="settings">設定画面へ</button>
+    <button class="sidebar-popup-action" data-action="logout">ログアウト</button>
+</div>
+
+<div id="sidebar-logout-modal" class="sidebar-logout-modal" hidden>
+    <div class="sidebar-logout-card">
+        <h3>ログアウトしますか？</h3>
+        <div id="sidebar-logout-user" class="sidebar-logout-user"></div>
+        <div class="sidebar-logout-actions">
+            <button id="sidebar-logout-confirm" class="btn btn-primary">ログアウト</button>
+            <button id="sidebar-logout-cancel" class="btn btn-secondary">キャンセル</button>
+        </div>
+    </div>
+</div>

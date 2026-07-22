@@ -1,6 +1,7 @@
 // タスク一覧ページ
 
 import { fetchTasks } from "../api.js";
+import { Router } from "../router/router.js";
 
 export async function render() {
     const tableBody = document.querySelector("#task-list-table tbody");
@@ -23,13 +24,13 @@ export async function render() {
         tableBody.innerHTML = tasks.map((task) => {
             const progress = task.progress ?? 0;
             const statusLabel = task.status || "未着手";
-            const statusColor = task.status === "完了" ? "#4caf50" : task.status === "進行中" ? "#ff9800" : "var(--text-muted)";
+            const statusColor = task.status === "done" || task.status === "完了" ? "#4caf50" : task.status === "in_progress" || task.status === "進行中" ? "#ff9800" : "var(--text-muted)";
 
             return `
-                <tr class="clickable-row" data-task-id="${task.id}">
+                <tr class="clickable-row" data-task-id="${task.task_id}">
                     <td><strong>${task.title}</strong></td>
-                    <td>${task.deadline || "-"}</td>
-                    <td>${task.priority || "-"}</td>
+                    <td>${task.description || "-"}</td>
+                    <td>${task.status || "-"}</td>
                     <td>
                         <div style="display:flex; align-items:center; gap:8px;">
                             <div class="progress-container" style="width: 80px;"><div class="progress-bar" style="width: ${progress}%;"></div></div>
@@ -45,8 +46,8 @@ export async function render() {
             row.addEventListener("click", () => {
                 const taskId = row.dataset.taskId;
                 if (taskId) {
-                    window.location.hash = `task-detail?id=${taskId}`;
-                    window.navigate?.("task_detail");
+                    // Router.navigate の第二引数でクエリパラメータを渡す
+                    Router.navigate("task_detail", `id=${taskId}`);
                 }
             });
         });
@@ -54,7 +55,7 @@ export async function render() {
         const createButton = document.getElementById("create-task-btn");
         if (createButton) {
             createButton.addEventListener("click", () => {
-                window.navigate?.("task_create");
+                Router.navigate("task_input");
             });
         }
     } catch (error) {

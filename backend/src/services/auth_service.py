@@ -1,27 +1,31 @@
+from config.config import Config
+
 from services.user_service import UserService
+from services.jwt_service import JwtService
+
+from clients.google_auth_client import GoogleAuthClient
 
 
 class AuthService:
 
     @staticmethod
-    def login_with_google(
-        google_sub: str,
-        display_name: str,
-    ) -> dict:
+    def login_with_google(id_token_str: str) -> dict:
         """
-        Googleログイン
+        ログインまたは新規登録を行う
         """
 
-        # TODO:
-        # Google ID Tokenを検証し、
-        # google_sub・display_nameを取得する
+        id_info = GoogleAuthClient.verify_id_token(
+            id_token_str
+        )
+
+        google_sub = id_info["sub"]
+        display_name = id_info.get("name", "User")
 
         user = UserService.get_user_by_google_sub(
             google_sub
         )
 
         if user is None:
-            """ユーザーが存在しない場合は新規作成する"""
 
             user_id = UserService.create_user(
                 google_sub=google_sub,
@@ -30,12 +34,21 @@ class AuthService:
 
             user = UserService.get_user(user_id)
 
-        UserService.update_last_login(
+        else:
+
+            UserService.update_last_login(
+                user["user_id"]
+            )
+
+            user = UserService.get_user(
+                user["user_id"]
+            )
+        
+        token = JwtService.generate_token(
             user["user_id"]
         )
 
-        # TODO:
-        # セッション生成
-        # JWT発行
-
-        return user
+        return {
+            "token": token,
+            "user": user,
+        }

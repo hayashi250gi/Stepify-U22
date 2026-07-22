@@ -61,6 +61,8 @@ body {
     background-color: var(--bg-sidebar);
     border-right: 1px solid var(--border-color);
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
 }
 
 #content-viewport {
@@ -174,6 +176,138 @@ body {
 .menu-item.active {
     background-color: rgba(0, 0, 0, 0.05);
     color: var(--accent-color);
+}
+
+.sidebar-account-card {
+    margin: auto 16px 16px;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--border-color);
+}
+
+.sidebar-account-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+}
+
+.sidebar-user-avatar,
+.sidebar-logout-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.sidebar-user-avatar-placeholder,
+.sidebar-logout-avatar-placeholder {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-color);
+    color: white;
+    font-weight: 700;
+}
+
+.sidebar-user-name,
+.sidebar-logout-user-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.sidebar-user-email,
+.sidebar-logout-user-email {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.sidebar-user-popup {
+    position: fixed;
+    z-index: 1200;
+    min-width: 160px;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+    padding: 8px;
+}
+
+.sidebar-popup-action {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 10px 8px;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.sidebar-popup-action:hover {
+    background: #f5f5f5;
+}
+
+.sidebar-logout-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1300;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-logout-card {
+    width: min(92vw, 360px);
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.sidebar-logout-card h3 {
+    margin-bottom: 16px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.sidebar-logout-user-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px 0 20px;
+}
+
+.sidebar-logout-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+}
+
+.sidebar-logout-actions .btn-primary {
+    background: #111111;
+    color: white;
+}
+
+.sidebar-logout-actions .btn-secondary {
+    background: white;
+    color: #111111;
+    border: 1px solid #111111;
 }
 
 /* カード型UI */
@@ -615,6 +749,59 @@ body {
     border: 1px solid var(--border-color);
 }
 
+.drag-handle {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    font-size: 18px;
+    color: var(--text-muted);
+    user-select: none;
+}
+
+.result-breakdown-step-card.dragging { opacity: 0.5; }
+.result-breakdown-step-card.drag-over { outline: 2px dashed var(--primary-color); }
+
+.editable-step-title {
+    display: inline-block;
+    min-width: 120px;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.editable-step-title[contenteditable="true"]:focus {
+    outline: 2px solid rgba(0,120,212,0.2);
+    background: #fff;
+}
+
+.editable-step-desc {
+    width: 100%;
+    min-height: 48px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px;
+    resize: vertical;
+}
+
+.parent-task-title-input {
+    font-size: 20px;
+    font-weight: 600;
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.parent-task-detail-input {
+    width: 100%;
+    min-height: 56px;
+    margin-top: 8px;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+}
+
 .result-breakdown-step-content {
     flex: 1;
     display: flex;
@@ -701,4 +888,20 @@ body {
         height: calc(100vh - 60px);
         /* モバイルは全体スクロールを許容 */
     }
+
+    .result-breakdown-step-card {
+        flex-direction: row;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .drag-handle { display: flex; }
+
+    .result-breakdown-step-meta {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .parent-task-title-input { font-size: 18px; }
+    .parent-task-detail-input { min-height: 64px; }
 }

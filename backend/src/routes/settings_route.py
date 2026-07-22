@@ -1,6 +1,7 @@
 import json
 
 from services.settings_service import SettingsService
+from utils.response import Response
 
 
 class SettingsRoute:
@@ -14,20 +15,17 @@ class SettingsRoute:
         settings = SettingsService.get_settings(user_id)
 
         if settings is None:
-            handler.send_response(404)
-            handler.end_headers()
+            Response.json(
+                handler,
+                404
+            )
             return
 
-        handler.send_response(200)
-        handler.send_header(
-            "Content-Type",
-            "application/json",
-        )
-        handler.end_headers()
-
-        handler.wfile.write(
-            json.dumps(settings).encode()
-        )
+        Response.json(
+                handler,
+                200,
+                settings
+            )
 
     @staticmethod
     def update_settings(handler, user_id: int):
@@ -46,17 +44,12 @@ class SettingsRoute:
 
         except json.JSONDecodeError:
 
-            handler.send_response(400)
-            handler.send_header(
-                "Content-Type",
-                "application/json",
-            )
-            handler.end_headers()
-
-            handler.wfile.write(
-                json.dumps({
+            Response.json(
+                handler,
+                400,
+                {
                     "message": "Invalid JSON."
-                }).encode()
+                }
             )
 
             return
@@ -70,17 +63,12 @@ class SettingsRoute:
 
         except ValueError as e:
 
-            handler.send_response(400)
-            handler.send_header(
-                "Content-Type",
-                "application/json",
-            )
-            handler.end_headers()
-
-            handler.wfile.write(
-                json.dumps({
+            Response.json(
+                handler,
+                400,
+                {
                     "message": str(e)
-                }).encode()
+                }
             )
 
             return

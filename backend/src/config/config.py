@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
+    DEBUG_MODE = True
+
     ## server
     HOST = os.getenv("HOST", "0.0.0.0")
     PORT = int(os.getenv("PORT", 8000))
@@ -21,9 +23,11 @@ class Config:
 
     ## Gemini
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+    GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
     ## JWT
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+    JWT_EXPIRE_HOURS = int(os.getenv("JWT_EXPIRE_HOURS", 24))
 
     ## OAuth
     GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")

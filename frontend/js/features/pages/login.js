@@ -1,19 +1,28 @@
 // ログインページ
+// このページでは Google ログインボタンの描画と、ログアウト・キャンセル操作を管理する。
 
-import { Router } from "../router/router.js";
 import { GoogleAuth } from "../auth/google_auth.js";
+import { Sidebar } from "../components/sidebar.js";
 
+// ログインページを描画し、各ボタンの動作を設定する。
 export function render() {
-    const clientId = '532692673300-p828sccd84dkpcdkbijme799ujit1so0.apps.googleusercontent.com';
-    const buttonContainer = document.getElementById('google-login-button');
-    const cancelButton = document.getElementById('login-cancel-btn');
+    const cancelButton = document.getElementById("login-cancel-btn");
+    const logoutButton = document.getElementById("login-logout-btn");
 
+    // キャンセルボタン押下時はタスク入力画面へ戻る。
     if (cancelButton) {
-        cancelButton.addEventListener('click', () => {
-            Router.navigate("task_input");
+        cancelButton.addEventListener("click", () => {
+            window.location.href = "/task_input.html";
         });
     }
 
-    // Googleログインボタンを描画
-    buttonContainer.innerHTML = GoogleAuth.renderButton('google-login-button');
+    // ログアウトボタン押下時は共通モーダルを表示する。
+    if (logoutButton) {
+        logoutButton.addEventListener("click", () => {
+            Sidebar.openLogoutModal();
+        });
+    }
+
+    // Googleログインボタンを描画する。
+    GoogleAuth.renderButton("google-login-button");
 }

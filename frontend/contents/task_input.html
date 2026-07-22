@@ -5,9 +5,14 @@
 
         <form id="decomp-form">
             <div class="input-group">
-                <input type="text" id="task-input" class="input-control" placeholder="例: 部屋の片付け、レポートの作成、プレゼン準備" required autocomplete="off">
+                <input type="text" id="task-input" class="input-control" placeholder="例: 部屋の片付け、レポートの作成" required autocomplete="off">
+                <input type="text" id="task-detail-input" class="input-control" placeholder="タスクの詳細を入力" autocomplete="off">
             </div>
-            <button type="submit" class="btn btn-primary mainmenu-submit-btn">タスクを分解する</button>
+            <button type="submit" id="decomp-submit-btn" class="btn btn-primary mainmenu-submit-btn">AIで分解する</button>
+            <div id="decomp-loading" class="decomp-loading" style="display:none;">
+                <span class="spinner"></span>
+                <span>AIがタスクを分析中です...</span>
+            </div>
         </form>
     </div>
 

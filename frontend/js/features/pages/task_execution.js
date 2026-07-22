@@ -1,4 +1,4 @@
-// タスク実行ページ
+// タスク実行ページ。タイマー操作と完了・キャンセルの遷移を管理する。
 
 export function render() {
 
@@ -55,13 +55,13 @@ export function render() {
 
     if (completeButton) {
         completeButton.addEventListener("click", () => {
-            window.navigate?.("task_complete");
+            window.location.href = "/task_execution_result.html";
         });
     }
 
     if (cancelButton) {
         cancelButton.addEventListener("click", () => {
-            window.navigate?.("mainmenu");
+            window.location.href = "/task_input.html";
         });
     }
 }

@@ -1,6 +1,7 @@
 import json
 
 from services.user_service import UserService
+from utils.response import Response
 
 
 class UserRoute:
@@ -18,16 +19,11 @@ class UserRoute:
             handler.end_headers()
             return
 
-        handler.send_response(200)
-        handler.send_header(
-            "Content-Type",
-            "application/json",
-        )
-        handler.end_headers()
-
-        handler.wfile.write(
-            json.dumps(user, default=str).encode()
-        )
+        Response.json(
+            handler,
+            200,
+            user
+        ) 
 
     @staticmethod
     def update_display_name(handler, user_id: int):
@@ -47,13 +43,13 @@ class UserRoute:
         except json.JSONDecodeError:
             ## JSONのデコードに失敗した場合は400 Bad Requestを返す
 
-            handler.send_response(400)
-            handler.send_header("Content-Type", "application/json")
-            handler.end_headers()
-
-            handler.wfile.write(json.dumps({
-                "message": "Invalid JSON."
-            }).encode())
+            Response.json(
+                handler,
+                400,
+                {
+                    "message": "Invalid JSON."
+                }
+            ) 
 
             return
 
@@ -62,14 +58,14 @@ class UserRoute:
         if display_name is None:
             ### display_nameがリクエストに含まれていない場合は400 Bad Requestを返す
 
-            handler.send_response(400)
-            handler.send_header("Content-Type", "application/json")
-            handler.end_headers()
-
-            handler.wfile.write(json.dumps({
-                "message": "display_name is required."
-            }).encode())
-
+            Response.json(
+                handler,
+                400,
+                {
+                    "message": "display_name is required."
+                }
+            ) 
+               
             return
 
         try:
@@ -82,13 +78,13 @@ class UserRoute:
         except ValueError as e:
             ### display_nameのバリデーションに失敗した場合は400 Bad Requestを返す
 
-            handler.send_response(400)
-            handler.send_header("Content-Type", "application/json")
-            handler.end_headers()
-
-            handler.wfile.write(json.dumps({
-                "message": str(e)
-            }).encode())
+            Response.json(
+                handler,
+                400,
+                {
+                    "message": str(e)
+                }
+            )
 
             return
 

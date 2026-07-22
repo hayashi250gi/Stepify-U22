@@ -1,8 +1,7 @@
-"""認証"""
-
 import json
 
 from services.auth_service import AuthService
+from utils.response import Response
 
 
 class AuthRoute:
@@ -11,7 +10,6 @@ class AuthRoute:
     def login_with_google(handler):
 
         try:
-
             content_length = int(
                 handler.headers.get("Content-Length", 0)
             )
@@ -22,42 +20,50 @@ class AuthRoute:
 
         except json.JSONDecodeError:
 
-            handler.send_response(400)
-            handler.end_headers()
-            return
-
-        id_token = data.get("id_token")
-
-        if id_token is None:
-
-            handler.send_response(400)
-            handler.end_headers()
-            return
-
-        try:
-
-            user = AuthService.login_with_google(id_token)
-
-        except ValueError as e:
-
-            handler.send_response(401)
-            handler.end_headers()
-
-            handler.wfile.write(
-                json.dumps({
-                    "message": str(e)
-                }).encode()
+            Response.json(
+                handler,
+                400,
+                {
+                    "message": "Invaled JSON"
+                }
             )
 
             return
 
-        handler.send_response(200)
-        handler.send_header(
-            "Content-Type",
-            "application/json",
-        )
-        handler.end_headers()
+        id_token = data.get("id_token")
 
-        handler.wfile.write(
-            json.dumps(user, default=str).encode()
-        )
+        if not id_token:
+
+            Response.json(
+                handler,
+                400,
+                {
+                    "message": "id_token is required."
+                }
+            )
+
+            return
+
+        try:
+
+            result = AuthService.login_with_google(
+                id_token
+            )
+
+        except ValueError as e:
+
+            Response.json(
+                handler,
+                401,
+                {
+                    "message": str(e)
+                }
+            )
+
+            return
+
+        Response.json(
+                handler,
+                200,
+                result
+            )

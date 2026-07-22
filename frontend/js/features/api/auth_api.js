@@ -1,32 +1,12 @@
+import { ApiClient } from "./api_client.js";
 
-
+// バックエンドの認証APIへアクセスするためのクライアント。
 export class AuthApi {
-
-    /**
-     * Googleでログインする
-     */
+    // Google IDトークンを送信して、JWT付きの認証結果を受け取る。
+    // 認証APIはトークン不要のため、skipAuth でリクエストする。
     static async loginWithGoogle(idToken) {
-
-        const response = await fetch("/api/auth/google", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                id_token: idToken
-            })
+        return ApiClient.postPublic("/api/auth/google", {
+            id_token: idToken,
         });
-
-        if (!response.ok) {
-
-            const error = await response.json();
-
-            throw new Error(error.message);
-
-        }
-
-        return await response.json();
-
     }
-
 }

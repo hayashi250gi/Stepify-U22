@@ -3,6 +3,7 @@
 import json
 
 from services.hello_service import HelloService
+from utils.response import Response
 
 
 class HelloRoute:
@@ -13,19 +14,8 @@ class HelloRoute:
         # テスト用レスポンスを作成
         response = HelloService.get()
 
-        # HTTPレスポンスを返す
-        handler.send_response(200)
-
-        # HTTPヘッダーを設定
-        handler.send_header(
-            "Content-Type",
-            "application/json"
-        )
-
-        # HTTPヘッダーの送信を終了
-        handler.end_headers()
-
-        # HTTPレスポンスボディを送信
-        handler.wfile.write(
-            json.dumps(response).encode()
-        )
+        Response.json(
+                handler,
+                200,
+                response
+            )

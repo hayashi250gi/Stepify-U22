@@ -11,9 +11,7 @@ class UserRepository:
         ユーザーを新規作成し、user_idを返す
         """
 
-        connection = Database.get_connection()
-
-        try:
+        with Database.get_connection() as connection:
             with connection.cursor() as cursor:
 
                 cursor.execute(
@@ -32,12 +30,10 @@ class UserRepository:
                 )
 
                 user_id = cursor.fetchone()[0]
-                connection.commit()
 
-                return user_id
+            connection.commit()
 
-        finally:
-            connection.close()
+            return user_id
 
     @staticmethod
     def get_user(user_id: int) -> dict | None:
@@ -45,9 +41,7 @@ class UserRepository:
         user_idからユーザー取得
         """
 
-        connection = Database.get_connection()
-
-        try:
+        with Database.get_connection() as connection:
             with connection.cursor() as cursor:
 
                 cursor.execute(
@@ -79,18 +73,13 @@ class UserRepository:
                     "last_login_at": row[5],
                 }
 
-        finally:
-            connection.close()
-
     @staticmethod
     def get_user_by_google_sub(google_sub: str) -> dict | None:
         """
         Googleログイン用
         """
 
-        connection = Database.get_connection()
-
-        try:
+        with Database.get_connection() as connection:
             with connection.cursor() as cursor:
 
                 cursor.execute(
@@ -122,18 +111,13 @@ class UserRepository:
                     "last_login_at": row[5],
                 }
 
-        finally:
-            connection.close()
-
     @staticmethod
     def update_last_login(user_id: int) -> None:
         """
         最終ログイン日時更新
         """
 
-        connection = Database.get_connection()
-
-        try:
+        with Database.get_connection() as connection:
             with connection.cursor() as cursor:
 
                 cursor.execute(
@@ -147,10 +131,7 @@ class UserRepository:
                     (user_id,),
                 )
 
-                connection.commit()
-
-        finally:
-            connection.close()
+            connection.commit()
 
     @staticmethod
     def update_display_name(user_id: int, display_name: str) -> None:
@@ -158,9 +139,7 @@ class UserRepository:
         表示名を更新する
         """
 
-        connection = Database.get_connection()
-
-        try:
+        with Database.get_connection() as connection:
             with connection.cursor() as cursor:
 
                 cursor.execute(
@@ -177,11 +156,7 @@ class UserRepository:
                     ),
                 )
 
-                connection.commit()
-
-        finally:
-            connection.close()
-
+            connection.commit()
 
     @staticmethod
     def delete_user(user_id: int) -> None:
@@ -189,9 +164,7 @@ class UserRepository:
         ユーザーを削除する
         """
 
-        connection = Database.get_connection()
-
-        try:
+        with Database.get_connection() as connection:
             with connection.cursor() as cursor:
 
                 cursor.execute(
@@ -202,7 +175,4 @@ class UserRepository:
                     (user_id,),
                 )
 
-                connection.commit()
-
-        finally:
-            connection.close()
+            connection.commit()

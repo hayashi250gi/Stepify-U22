@@ -9,6 +9,7 @@ class SettingsRepository:
     def get_settings(user_id: int) -> dict | None:
         """
         ユーザー設定を取得する
+        データベースから取り出し、JSONに変換して返す
         """
 
         with Database.create_pool().connection() as conn:

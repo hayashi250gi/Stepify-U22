@@ -18,3 +18,4 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_DELETE(self):
         Router.route(self)
+

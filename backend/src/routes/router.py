@@ -4,6 +4,7 @@ from routes.task_route import TaskRoute
 from routes.user_route import UserRoute
 from routes.settings_route import SettingsRoute
 from routes.config_route import ConfigRoute
+from routes.ai_route import AiRoute
 
 
 
@@ -68,6 +69,10 @@ class Router:
 
             if path == "/api/auth/google":
                 AuthRoute.login_with_google(handler)
+                return
+            
+            if path == "/api/ai/decompose":
+                AiRoute.decompose_task(handler)
                 return
 
             if path == "/api/tasks":

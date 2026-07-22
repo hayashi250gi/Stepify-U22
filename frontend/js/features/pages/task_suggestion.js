@@ -1,4 +1,4 @@
-// タスク提案ページ
+// タスク提案ページ。実行開始・スキップ・キャンセルの操作を受け付ける。
 
 export function render() {
     const startButton = document.getElementById("start-execution-btn");
@@ -7,7 +7,7 @@ export function render() {
 
     if (startButton) {
         startButton.addEventListener("click", () => {
-            window.navigate?.("task_action");
+            window.location.href = "/task_execution.html";
         });
     }
 
@@ -19,7 +19,7 @@ export function render() {
 
     if (cancelButton) {
         cancelButton.addEventListener("click", () => {
-            window.navigate?.("mainmenu");
+            window.location.href = "/task_input.html";
         });
     }
 }

@@ -12,19 +12,28 @@ class TaskService:
         return TaskRepository.get_task(task_id)
 
     @staticmethod
-    def create_task(user_id: int, title: str):
+    def create_task(user_id: int, title: str, description: str | None = None, subtasks: list | None = None):
         """タスクを作成する"""
         
-        # title編集
         title = title.strip()
         if len(title) == 0:
             raise ValueError("Title cannot be empty")
         
         if len(title) > 255:
             raise ValueError("Title must be 255 characters or less")
+
+        if subtasks is None:
+            subtasks = []
+
+        if not isinstance(subtasks, list):
+            raise ValueError("Subtasks must be a list.")
         
-        ### TODO 認証実装後は、ユーザーIDはJWTから取得するようにする
-        task_id = TaskRepository.create_task(user_id = user_id, title = title)
+        task_id = TaskRepository.create_task(
+            user_id=user_id,
+            title=title,
+            description=description,
+            subtasks=subtasks
+        )
         return task_id
     
     @staticmethod

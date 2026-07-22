@@ -1,6 +1,4 @@
-// 使い方ページ
-
-import { Router } from "../router/router.js";
+// 使い方ページの表示と、導線ボタンの遷移処理を管理する。
 
 export function render() {
     const startButton = document.getElementById("start-using-btn");
@@ -8,7 +6,7 @@ export function render() {
     // クリックイベントリスナーを設定
     if (startButton) {
         startButton.addEventListener("click", () => {
-            Router.navigate("task_input");
+            window.location.href = "/task_input.html";
         });
     }
 }

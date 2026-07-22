@@ -1,10 +1,27 @@
 # Stepify
 
-Development environment using:
+## Development environment using:
 - nginx
 - raw python
 - postgresql
 - docker compose
+
+## 必要機能
+
+### タスク関連機能
+- タスクのユーザー入力、AI分解・出力
+- タスクの優先度、サブタスクの実行順に基づき実行すべきタスクを提案
+- タスクの一覧表示
+- タスクの編集・削除
+- タスクの実行履歴管理
+
+### AI機能
+- ユーザーがタスク情報を入力
+- AIがタスクをサブタスクに分解・出力
+
+### 認証機能
+- Googleアカウントを利用したログイン機能
+- ログイン済みユーザはデータベース保存、未ログインユーザはIndexDB
 
 ## updated history
 
