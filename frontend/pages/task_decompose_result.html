@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stepify - タスク分解</title>
+    <link rel="stylesheet" href="/css/style.css?v=20260822-4">
+    <script type="module" src="/js/main.js?v=20260822-4"></script>
+</head>
+<body>
+    <div id="app-container">
+        <header id="header-viewport"></header>
+        <div id="main-layout">
+            <aside id="sidebar-viewport"></aside>
+            <main id="content-viewport">
+                <div class="view-container">
+                    <div id="result-breakdown-container"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script type="module">
+        import { render } from "/js/features/pages/task_decompose_result.js";
+        // 非同期でテンプレートを読み込んでから描画
+        fetch('/assets/task_decompose_result_form.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('result-breakdown-container').innerHTML = html;
+        render();
+            });
+    </script>
+</body>
+</html>

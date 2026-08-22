@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stepify - タスク分解</title>
+    <link rel="stylesheet" href="/css/style.css?v=20260822-4">
+    <script type="module" src="/js/main.js?v=20260822-4"></script>
+</head>
+<body>
+    <div id="app-container">
+        <header id="header-viewport"></header>
+        <div id="main-layout">
+            <aside id="sidebar-viewport"></aside>
+            <main id="content-viewport">
+                <div class="view-container">
+                    <div class="card howto-card">
+                        <h2 class="card-title">Stepify の使い方</h2>
+                        <div class="howto-content">
+                            <p><strong>Step 1: タスクの入力</strong><br>「部屋の掃除」や「勉強」など、心理的ハードルが高くて着手しづらい抽象的な内容を入力します。</p>
+                            <p><strong>Step 2: AIによる最小単位への分解</strong><br>Gemini APIがタスクを認知心理学に基づいた「今すぐ迷わず動ける具体的なアクション」に分解し、所要時間を算出します。</p>
+                            <p><strong>Step 3: 提案と即時実行</strong><br>システムが「次にやるべき1つのこと」だけを提示します。選択疲れを起こすことなく、タイマーを回して即座に行動を開始できます。</p>
+                        </div>
+                        <div class="howto-actions">
+                            <button id="start-using-btn" class="btn btn-primary">使ってみる</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script type="module">
+        import { render } from "/js/features/pages/how_to_use.js";
+        render();
+    </script>
+</body>
+</html>

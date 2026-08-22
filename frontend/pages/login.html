@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stepify - タスク分解</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="module" src="/js/main.js"></script>
+</head>
+<body>
+    <div id="app-container">
+        <header id="header-viewport"></header>
+        <div id="main-layout">
+            <aside id="sidebar-viewport"></aside>
+            <main id="content-viewport">
+                <div class="view-container">
+                    <div class="card login-card">
+                        <h2 class="card-title">アカウントログイン・データ同期</h2>
+                        <p class="login-description">
+                            Googleアカウントと連携することで、サーバーへデータを安全に同期し、複数端末からアクセス可能になります。</p>
+
+                        <div id="google-login-btn" class="google-login-button"></div>
+
+                        <div id="auth-status-message" class="auth-status-message" aria-live="polite"></div>
+
+                        <button id="login-cancel-btn" class="btn btn-secondary login-cancel-btn">キャンセル</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script type="module">
+        import { render } from "/js/features/pages/login.js";
+        render();
+    </script>
+</body>
+</html>

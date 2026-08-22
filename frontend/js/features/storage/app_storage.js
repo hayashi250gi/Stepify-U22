@@ -4,6 +4,7 @@ export class AppStorage {
     static dbVersion = 2;
     static storeName = "guest_data";
     static db = null;
+    static initPromise = null;
 
     /**
      * IndexedDB を初期化する。
@@ -14,11 +15,15 @@ export class AppStorage {
             return this.db;
         }
 
+        if (this.initPromise) {
+            return this.initPromise;
+        }
+
         if (!window.indexedDB) {
             throw new Error("このブラウザでは IndexedDB を使用できません。別の保存方法へ切り替えてください。");
         }
 
-        return new Promise((resolve, reject) => {
+        this.initPromise = new Promise((resolve, reject) => {
             const request = window.indexedDB.open(this.dbName, this.dbVersion);
 
             request.onupgradeneeded = (event) => {
@@ -58,7 +63,11 @@ export class AppStorage {
             request.onerror = () => {
                 reject(new Error("IndexedDB の初期化に失敗しました。"));
             };
+        }).finally(() => {
+            this.initPromise = null;
         });
+
+        return this.initPromise;
     }
 
     /**
@@ -177,9 +186,13 @@ export class AppStorage {
             return new Promise((resolve, reject) => {
                 const transaction = database.transaction(this.storeName, "readonly");
                 const store = transaction.objectStore(this.storeName);
+                // "action_history" を除くすべてのキーを取得
                 const request = store.getAllKeys();
 
-                request.onsuccess = () => resolve(request.result || []);
+                request.onsuccess = () => {
+                    const allKeys = request.result || [];
+                    resolve(allKeys.filter(key => key !== "action_history"));
+                };
                 request.onerror = () => reject(new Error("キー一覧の取得に失敗しました。"));
             });
         } catch (error) {
@@ -200,7 +213,11 @@ export class AppStorage {
                 const store = transaction.objectStore(this.storeName);
                 const request = store.getAll();
 
-                request.onsuccess = () => resolve(request.result || []);
+                request.onsuccess = () => {
+                    const allData = request.result || [];
+                    // "action_history" を除く
+                    resolve(allData.filter(item => item.id !== "action_history"));
+                };
                 request.onerror = () => reject(new Error("全データの取得に失敗しました。"));
             });
         } catch (error) {
@@ -431,4 +448,37 @@ export class AppStorage {
             return { count: 0, keys: [], latestUpdate: null };
         }
     }
+
+    /**
+     * アクション履歴を保存する。
+     * @param {string} taskId
+     * @param {string} subtaskId
+     * @param {string} action
+     */
+    static async saveHistory(taskId, subtaskId, action) {
+        try {
+            const database = await this.initialize();
+            return new Promise((resolve, reject) => {
+                const transaction = database.transaction(this.storeName, "readwrite");
+                const store = transaction.objectStore(this.storeName);
+
+                // 既存の履歴を取得するか、新規作成
+                const historyKey = "action_history";
+                const request = store.get(historyKey);
+
+                request.onsuccess = () => {
+                    const data = request.result ? request.result.data : [];
+                    data.push({ taskId, subtaskId, action, timestamp: new Date().toISOString() });
+
+                    const updateRequest = store.put({ id: historyKey, data: data, updatedAt: new Date().toISOString() });
+                    updateRequest.onsuccess = () => resolve();
+                    updateRequest.onerror = () => reject(new Error("履歴の保存に失敗しました。"));
+                };
+                request.onerror = () => reject(new Error("履歴の取得に失敗しました。"));
+            });
+        } catch (error) {
+            throw new Error(error.message || "履歴の保存に失敗しました。");
+        }
+    }
 }
+

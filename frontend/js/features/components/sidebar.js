@@ -2,7 +2,7 @@
 
 import { AuthState } from "../auth/auth_state.js";
 import { GoogleAuth } from "../auth/google_auth.js";
-import { Router } from "../router/router.js";
+import { navigate } from "../router/router.js";
 
 export class Sidebar {
     // サイドバーHTMLを読み込み、アカウントカードとイベントを初期化する。
@@ -23,44 +23,76 @@ export class Sidebar {
         }
 
         // 認証状態に応じてアカウントカードとポップアップ内容を描画する。
-        this.renderAccountCard();
-        this.bindEvents();
+        await this.renderAccountCard();
+        this.cardEvents();
+
+        this.bindEvents()
+    }
+
+    static bindEvents() {
+        const menuItems = document.querySelectorAll(".menu-item");
+
+        menuItems.forEach((item) => {
+            item.addEventListener("click", () => {
+                const view = item.dataset.view;
+
+                if (!view) {
+                    return;
+                }
+
+                // 設定、ログインなど他のメニュー項目にも対応
+                // frontend/js/features/components/sidebar.js
+                const routes = {
+                    "task_list": "/tasks",
+                    "task_input": "/new",
+                    "task_suggestion": "/suggest",
+                    "how_to_use": "/how-to-use",
+                    "setting": "/settings",
+                    "login": "/login"
+                };
+
+                navigate(routes[view] || `/${view}`);
+            });
+        });
     }
 
     // 認証状態に応じてサイドバーのアカウント表示を切り替える。
-    static renderAccountCard() {
+    static async renderAccountCard() {
         const card = document.getElementById("sidebar-account-card");
         const popup = document.getElementById("sidebar-user-popup");
         const state = AuthState.loadAuthState();
+        const isLoggedIn = AuthState.isLoggedIn();
 
-        if (!card) {
-            return;
-        }
+        if (!card) return;
 
-        // ログイン済みかどうかを判定し、ユーザー情報を取得する。
-        const isLoggedIn = Boolean(state?.isLoggedIn && state?.user);
-        const user = state?.user || {};
-        const avatarUrl = user.picture || user.avatar_url || "";
-        const displayName = user.display_name || user.name || "ゲストユーザー";
-        const email = user.email || "";
-
-        // アカウントカードは常に表示し、状態に応じて内容を切り替える。
+        // hidden 属性を解除して表示可能にする
         card.hidden = false;
-        card.innerHTML = `
-            <button class="sidebar-account-button" type="button" aria-label="ユーザー情報を表示">
-                ${avatarUrl ? `<img src="${avatarUrl}" alt="${displayName}" class="sidebar-user-avatar">` : `<div class="sidebar-user-avatar-placeholder">${displayName.charAt(0)}</div>`}
-                <span class="sidebar-user-name">${displayName}</span>
-            </button>
-        `;
 
-        // ログイン済みユーザーのみメールアドレスを表示する。
-        if (email && isLoggedIn) {
-            const emailLabel = document.createElement("div");
-            emailLabel.className = "sidebar-user-email";
-            emailLabel.textContent = email;
-            card.appendChild(emailLabel);
-        }
+        // アカウントカードのテンプレートを読み込む
+        const response = await fetch("/assets/sidebar_account_card.html");
+        card.innerHTML = await response.text();
 
+        const avatarArea = document.getElementById("sidebar-avatar-area");
+        const nameEl = document.getElementById("sidebar-user-name");
+        const emailEl = document.getElementById("sidebar-user-email");
+
+        const userInfo = isLoggedIn ? {
+            name: state.user.display_name || state.user.name || "ユーザー",
+            email: state.user.email || "",
+            avatar: state.user.picture || state.user.avatar_url || null,
+            isGuest: false
+        } : {
+            name: "ゲストユーザー",
+            email: "ローカルで保存中",
+            avatar: null,
+            isGuest: true
+        };
+
+        nameEl.textContent = userInfo.name;
+        emailEl.textContent = userInfo.email;
+        avatarArea.innerHTML = userInfo.avatar
+            ? `<img src="${userInfo.avatar}" class="sidebar-user-avatar">`
+            : `<div class="sidebar-user-avatar-placeholder">${userInfo.name.charAt(0)}</div>`;
         // ポップアップの操作一覧を認証状態に合わせて切り替える。
         if (popup) {
             popup.innerHTML = isLoggedIn
@@ -69,15 +101,14 @@ export class Sidebar {
                     <button class="sidebar-popup-action" data-action="logout">ログアウト</button>
                 `
                 : `
-                    <button class="sidebar-popup-action" data-action="settings">設定画面へ</button>
-                    <button class="sidebar-popup-action" data-action="login">ログイン</button>
+                    <button class="sidebar-popup-action" data-action="login">ログインして同期</button>
                 `;
             popup.hidden = true;
         }
     }
 
     // アカウントカードとポップアップのクリックイベントを登録する。
-    static bindEvents() {
+    static cardEvents() {
         const card = document.getElementById("sidebar-account-card");
         const popup = document.getElementById("sidebar-user-popup");
         const modal = document.getElementById("sidebar-logout-modal");
@@ -112,12 +143,12 @@ export class Sidebar {
             popup.hidden = true;
 
             if (action === "settings") {
-                await Router.navigate("setting");
+                navigate("/settings");
                 return;
             }
 
             if (action === "login") {
-                await Router.navigate("login");
+                navigate("/login");
                 return;
             }
 

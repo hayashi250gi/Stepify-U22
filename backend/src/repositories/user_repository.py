@@ -6,34 +6,31 @@ from database.database import Database
 class UserRepository:
 
     @staticmethod
-    def create_user(google_sub: str, display_name: str) -> int:
+    def create_user(user_id: int, email: str, display_name: str) -> None:
         """
-        ユーザーを新規作成し、user_idを返す
+        ユーザーとデフォルト設定を新規作成する
         """
 
         with Database.get_connection() as connection:
             with connection.cursor() as cursor:
-
+                # ユーザー作成
                 cursor.execute(
                     """
-                    INSERT INTO users (
-                        google_sub,
-                        display_name
-                    )
-                    VALUES (%s, %s)
-                    RETURNING user_id;
+                    INSERT INTO users (user_id, email, display_name)
+                    VALUES (%s, %s, %s);
                     """,
-                    (
-                        google_sub,
-                        display_name,
-                    ),
+                    (user_id, email, display_name),
                 )
 
-                user_id = cursor.fetchone()[0]
-
+                # デフォルト設定作成
+                cursor.execute(
+                    """
+                    INSERT INTO user_settings (user_id, appearance, notification)
+                    VALUES (%s, %s, %s);
+                    """,
+                    (user_id, '{"theme": "system"}', '{"enabled": true, "sound": true}'),
+                )
             connection.commit()
-
-            return user_id
 
     @staticmethod
     def get_user(user_id: int) -> dict | None:

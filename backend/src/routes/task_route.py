@@ -52,12 +52,16 @@ class TaskRoute:
 
             description = data.get("description")
             subtasks = data.get("subtasks", [])
+            deadline = data.get("deadline")
+            priority = data.get("priority", "medium")
 
             task_id = TaskService.create_task(
                 user_id=user_id,
                 title=data["title"],
                 description=description,
-                subtasks=subtasks
+                subtasks=subtasks,
+                deadline=deadline,
+                priority=priority
             )
 
             Response.json(
@@ -99,7 +103,11 @@ class TaskRoute:
             updated_task_id = TaskService.update_task(
                 task_id=task_id,
                 user_id=user_id,
-                title=data["title"]
+                title=data["title"],
+                description=data.get("description"),
+                subtasks=data.get("subtasks"),
+                deadline=data.get("deadline"),
+                priority=data.get("priority")
             )
 
             if updated_task_id is None:
@@ -202,3 +210,29 @@ class TaskRoute:
                     "tasks": tasks
                 }
             )
+
+    @staticmethod
+    def get_suggestion(handler, task_id=None):
+        """次にやるべきタスクを提案する"""
+        suggestion = TaskService.suggest_next_subtask(task_id)
+
+        if suggestion is None:
+            Response.json(handler, 200, {"message": "No tasks to do."})
+            return
+
+        Response.json(handler, 200, suggestion)
+
+    @staticmethod
+    def update_subtask_status(handler, task_id, subtask_id):
+        try:
+            content_length = int(handler.headers.get("Content-Length", 0))
+            body = handler.rfile.read(content_length)
+            data = json.loads(body.decode("utf-8"))
+
+            # サービス層でステータス更新
+            TaskService.update_subtask_status(task_id, subtask_id, data['status'])
+
+            Response.json(handler, 200, {"message": "Subtask updated."})
+        except Exception as e:
+            Response.json(handler, 500, {"message": str(e)})
+

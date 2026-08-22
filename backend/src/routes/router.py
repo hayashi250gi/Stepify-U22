@@ -1,3 +1,5 @@
+import json
+from urllib.parse import parse_qs, urlsplit
 from routes.auth_route import AuthRoute
 from routes.hello_route import HelloRoute
 from routes.task_route import TaskRoute
@@ -13,7 +15,8 @@ class Router:
     @staticmethod
     def route(handler):
 
-        path = handler.path
+        parsed_path = urlsplit(handler.path)
+        path = parsed_path.path
         method = handler.command
 
         # =========================
@@ -30,10 +33,14 @@ class Router:
                 TaskRoute.list_tasks(handler)
                 return
 
+            if path == "/api/tasks/suggest":
+                task_id = parse_qs(parsed_path.query).get("task_id", [None])[0]
+                TaskRoute.get_suggestion(handler, int(task_id) if task_id and task_id.isdigit() else None)
+                return
+
             if path.startswith("/api/tasks/"):
 
                 task_id = path.removeprefix("/api/tasks/")
-
                 if task_id.isdigit():
                     TaskRoute.get_task(handler, int(task_id))
                     return
@@ -59,7 +66,6 @@ class Router:
             if path == "/api/config":
                 ConfigRoute.get_config(handler)
                 return
-                
 
         # =========================
         # POST
@@ -85,10 +91,19 @@ class Router:
 
         elif method == "PUT":
 
+            if path.startswith("/api/tasks/") and "/subtasks/" in path:
+                # /api/tasks/{task_id}/subtasks/{subtask_id}
+                parts = path.split("/")
+                task_id = parts[3]
+                subtask_id = parts[5]
+
+                if task_id.isdigit() and subtask_id.isdigit():
+                    TaskRoute.update_subtask_status(handler, int(task_id), int(subtask_id))
+                    return
+                            
             if path.startswith("/api/tasks/"):
 
                 task_id = path.removeprefix("/api/tasks/")
-
                 if task_id.isdigit():
                     TaskRoute.update_task(handler, int(task_id))
                     return

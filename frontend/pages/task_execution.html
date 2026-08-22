@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stepify - タスク分解</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="module" src="/js/main.js"></script>
+</head>
+<body>
+    <div id="app-container">
+        <header id="header-viewport"></header>
+        <div id="main-layout">
+            <aside id="sidebar-viewport"></aside>
+            <main id="content-viewport">
+                <div class="view-container task-action-view">
+                    <div class="card task-action-card">
+                        <p class="task-action-caption">タスクを実行中...</p>
+                        <h2 class="task-action-title">机の上のゴミをまとめる</h2>
+
+                        <div id="timer-display" class="timer-display">15:00</div>
+
+                        <div class="task-action-buttons">
+                            <button id="complete-task-btn" class="btn btn-primary task-action-complete-btn">完了した！</button>
+                            <button id="cancel-action-btn" class="btn btn-secondary">中断する</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script type="module">
+        import { render } from "/js/features/pages/task_execution.js";
+        render();
+    </script>
+</body>
+</html>

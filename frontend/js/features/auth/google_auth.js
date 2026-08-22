@@ -1,82 +1,7 @@
-// import { AuthApi } from "../api/auth_api.js";
-// import { Config } from "../../config.js";
-
-// export class GoogleAuth {
-
-//     /**
-//      * Google Identity Services を初期化する
-//      * GoogleClientId は Config.initialize() で取得する必要があるため、Config.initialize() の後に呼び出すこと
-//      */
-//     static async initialize() {
-
-//         await new Promise((resolve) => {
-//             if (window.google && window.google.accounts) {
-//                 resolve();
-//             } else {
-//                 const script = document.createElement('script');
-//                 script.src = 'https://accounts.google.com/gsi/client';
-//                 script.onload = resolve;
-//                 document.head.appendChild(script);
-//             }
-//         });
-
-//         google.accounts.id.initialize({
-//             client_id: Config.googleClientId,
-//             callback: GoogleAuth.handleCredentialResponse,
-//         });
-
-//     }
-
-//     /**
-//      * Googleログインボタンを描画する
-//      */
-//     static renderButton(elementId) {
-
-//         const element = document.getElementById(elementId);
-
-//         console.log("btn_element =", element);
-
-//         google.accounts.id.renderButton(
-//             element,
-//             {
-//                 theme: "outline",
-//                 size: "large",
-//                 width: 240,
-//             }
-//         );
-
-//     }
-
-//     /**
-//      * Googleログイン成功時
-//      */
-//     static async handleCredentialResponse(response) {
-//         console.log("login_response =", response);
-
-//         try {
-
-//             const result = await AuthApi.loginWithGoogle(
-//                 response.credential
-//             );
-
-//             console.log(result);
-
-//         } catch (error) {
-
-//             console.error(error);
-
-//         }
-
-//     }
-
-// }
-
-
 import { AuthApi } from "../api/auth_api.js";
 import { Config } from "../../config.js";
 import { AuthState } from "./auth_state.js";
 import { AppStorage } from "../storage/app_storage.js";
-import { Router } from "../router/router.js";
 import { Sidebar } from "../components/sidebar.js";
 
 // Googleログインと認証状態管理の流れを担当するモジュール。
@@ -95,6 +20,7 @@ export class GoogleAuth {
 
             const script = document.createElement("script");
             script.src = "https://accounts.google.com/gsi/client";
+            
 
             script.onload = () => resolve();
             script.onerror = () => reject(new Error("Google認証スクリプトの読み込みに失敗しました。"));
@@ -103,6 +29,7 @@ export class GoogleAuth {
         });
 
         if (!Config.googleClientId) {
+            console.log("DEBUG Google Client ID が未設定です。設定取得を確認してください。")
             throw new Error("Google Client ID が未設定です。設定取得を確認してください。");
         }
 
@@ -167,14 +94,13 @@ export class GoogleAuth {
 
             this.showMessage("ログインに成功しました。", "success");
 
-            // ログイン成功後は同期状態ページへ自動遷移する。
-            await Router.navigate("sync_status");
+            // ログイン成功後はタスク入力ページへ遷移する。
+            window.location.href = "/pages/task_input.html";
         } catch (error) {
             console.error("[GoogleAuth] Login failed", error);
             this.showMessage(error.message || "ログインに失敗しました。", "error");
         }
     }
-
     /**
      * ログアウト処理。
      * Cookie とローカル状態を削除し、必要ならページ再読み込みを行う。
@@ -189,8 +115,8 @@ export class GoogleAuth {
                 Sidebar.renderAccountCard();
             }
 
-            // ログアウト後はメインページへ戻す。
-            await Router.navigate("task_input");
+            // ログアウト後はタスク入力ページへ戻す。
+            window.location.href = "/pages/task_input.html";
         } catch (error) {
             console.error("[GoogleAuth] Logout failed", error);
             this.showMessage(error.message || "ログアウトに失敗しました。", "error");
@@ -231,3 +157,4 @@ export class GoogleAuth {
         container.appendChild(element);
     }
 }
+

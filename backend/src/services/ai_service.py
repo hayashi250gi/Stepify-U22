@@ -32,7 +32,7 @@ class AiService:
                     "title": "デバッグ用借りタスクB",
                     "description": "タスク詳細",
                     "order_no": 2,
-                    "estimated_minutes": 30
+                    "estimated_minutes": 45
                 }
             ]
 

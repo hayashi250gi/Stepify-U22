@@ -1,0 +1,34 @@
+<div class="result-breakdown-card">
+    <div class="result-breakdown-header" style="flex-direction: column; align-items: flex-start;">
+        <div class="result-breakdown-title-area">
+            <input id="parent-task-title-input" class="parent-task-title-input" placeholder="タスクタイトルを入力" />
+            <textarea id="parent-task-detail-input" class="parent-task-detail-input" placeholder="タスクの詳細（任意）"></textarea>
+        </div>
+        
+        <div class="result-breakdown-meta-area">
+            <label>
+                優先度:
+                <select id="parent-task-priority-input">
+                    <option value="low">低</option>
+                    <option value="medium" selected>中</option>
+                    <option value="high">高</option>
+                </select>
+            </label>
+            <label>
+                締切:
+                <input type="datetime-local" id="parent-task-deadline-input" />
+            </label>
+        </div>
+    </div>
+
+    <p class="result-breakdown-description">以下のステップが生成されました。タイトル・サブタスクは画面内で直接編集できます。ドラッグで順番を並べ替えてください。</p>
+
+    <div id="steps-list-container" class="result-breakdown-list"></div>
+
+    <button id="add-step-btn" class="btn btn-secondary add-step-btn" style="width:100%; margin-top:10px;">＋ ステップを追加</button>
+
+    <div class="result-breakdown-actions">
+        <button id="retry-breakdown-btn" class="btn btn-secondary result-breakdown-retry-btn">やり直す</button>
+        <button id="to-proposal-btn" class="btn btn-primary result-breakdown-confirm-btn">この内容で確定して進む</button>
+    </div>
+</div>

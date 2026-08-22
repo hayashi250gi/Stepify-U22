@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stepify - タスク一覧</title>
+    <link rel="stylesheet" href="/css/style.css?v=20260822-4">
+</head>
+<body>
+    <div id="app-container">
+        <header id="header-viewport"></header>
+        <div id="main-layout">
+            <aside id="sidebar-viewport"></aside>
+            <main id="content-viewport">
+                <div class="view-container">
+                    <div class="task-list-header">
+                        <h2 class="card-title task-list-title">登録中の親タスク一覧</h2>
+                        <button id="create-task-btn" class="btn btn-primary task-list-create-btn">＋ 新規登録</button>
+                    </div>
+                    <div class="card task-list-card">
+                        <table class="data-table" id="task-list-table">
+                            <thead>
+                                <tr>
+                                    <th><button class="task-sort-btn" data-sort-key="title">親タスク名</button></th>
+                                    <th><button class="task-sort-btn" data-sort-key="deadline">締切</button></th>
+                                    <th><button class="task-sort-btn" data-sort-key="priority">優先度</button></th>
+                                    <th><button class="task-sort-btn" data-sort-key="progress">進捗率</button></th>
+                                    <th><button class="task-sort-btn" data-sort-key="status">ステータス</button></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script type="module">
+        import { render } from "/js/features/pages/task_list.js?v=20260822-15";
+        render();
+    </script>
+</body>
+</html>

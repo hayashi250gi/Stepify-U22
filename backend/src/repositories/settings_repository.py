@@ -10,9 +10,14 @@ class SettingsRepository:
         """
         ユーザー設定を取得する
         データベースから取り出し、JSONに変換して返す
+        存在しない場合はデフォルト値を挿入して返す
         """
+        default_settings = {
+            "appearance": {"theme": "system"},
+            "notification": {"enabled": True, "sound": True}
+        }
 
-        with Database.create_pool().connection() as conn:
+        with Database.get_connection() as conn:
             with conn.cursor() as cur:
 
                 cur.execute(
@@ -27,7 +32,16 @@ class SettingsRepository:
                 row = cur.fetchone()
 
                 if row is None:
-                    return None
+                    # レコードがない場合はデフォルト値を挿入
+                    cur.execute(
+                        """
+                        INSERT INTO settings (user_id, settings)
+                        VALUES (%s, %s)
+                        """,
+                        (user_id, json.dumps(default_settings))
+                    )
+                    conn.commit()
+                    return default_settings
 
                 settings = row[0]
 
@@ -45,20 +59,19 @@ class SettingsRepository:
         ユーザー設定を更新する
         """
 
-        with Database.create_pool().connection() as conn:
+        with Database.get_connection() as conn:
             with conn.cursor() as cur:
-
                 cur.execute(
                     """
-                    UPDATE settings
-                    SET
-                        settings = %s,
+                    INSERT INTO settings (user_id, settings)
+                    VALUES (%s, %s)
+                    ON CONFLICT (user_id) DO UPDATE SET
+                        settings = EXCLUDED.settings,
                         updated_at = CURRENT_TIMESTAMP
-                    WHERE user_id = %s
                     """,
                     (
-                        json.dumps(settings),
                         user_id,
+                        json.dumps(settings),
                     )
                 )
 

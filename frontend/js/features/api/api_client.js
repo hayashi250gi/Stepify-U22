@@ -2,7 +2,6 @@
 // 全APIリクエストに自動で Authorization ヘッダーを付与し、
 // 401レスポンス時にグローバルな認証エラーハンドリングを行う。
 import { AuthState } from "../auth/auth_state.js";
-import { Router } from "../router/router.js";
 
 export class ApiClient {
 
@@ -77,7 +76,10 @@ export class ApiClient {
             fetchOptions.body = body;
         }
 
-        const response = await fetch(url, fetchOptions);
+        const response = await fetch(url, {
+            ...fetchOptions,
+            signal: AbortSignal.timeout(8000),
+        });
 
         // レスポンスボディをテキストとして取得（空レスポンス対策）
         const text = await response.text();
@@ -134,8 +136,7 @@ export class ApiClient {
         console.warn("[ApiClient] 401 Unauthorized - 認証状態をクリアしてログインページへ遷移します。");
         AuthState.clearAuthState();
 
-        // Router の currentQuery がログイン関連でなければ遷移する
-        Router.navigate("login");
+        window.location.href = "/pages/login.html";
 
         // ユーザー通知用のメッセージを表示
         this._showAuthErrorMessage();

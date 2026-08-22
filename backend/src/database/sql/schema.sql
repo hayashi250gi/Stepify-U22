@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- タスクテーブル
+-- status: todo, in_progress, done
+-- priority: low, medium, high
 CREATE TABLE IF NOT EXISTS tasks (
 
     task_id SERIAL PRIMARY KEY,
@@ -29,6 +31,10 @@ CREATE TABLE IF NOT EXISTS tasks (
     title VARCHAR(255) NOT NULL,
 
     description TEXT,
+
+    deadline TIMESTAMP,
+
+    priority VARCHAR(20) NOT NULL DEFAULT 'medium',
 
     status VARCHAR(20) NOT NULL DEFAULT 'todo',
 
@@ -104,10 +110,6 @@ CREATE TABLE IF NOT EXISTS settings (
         "notification": {
             "enabled": true,
             "sound": true
-        },
-        "sync": {
-            "auto_sync": true,
-            "sync_only_wifi": false
         }
     }'::jsonb,
 

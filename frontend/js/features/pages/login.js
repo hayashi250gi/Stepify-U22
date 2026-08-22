@@ -1,28 +1,42 @@
-// ログインページ
-// このページでは Google ログインボタンの描画と、ログアウト・キャンセル操作を管理する。
+// frontend/js/features/pages/login.js
+import { navigate } from "/js/features/router/router.js";
+import { GoogleAuth } from "/js/features/auth/google_auth.js";
+import { Sidebar } from "/js/features/components/sidebar.js";
 
-import { GoogleAuth } from "../auth/google_auth.js";
-import { Sidebar } from "../components/sidebar.js";
+export async function render() {
+    const contentView = document.getElementById("content-viewport");
+    if (!document.getElementById("login-card")) {
+        contentView.innerHTML = `
+            <div class="view-container mainmenu-view">
+                <div class="card login-card" id="login-card">
+                    <h2 class="card-title">ログイン</h2>
+                    <p class="login-description">データを同期するためにログインしてください。</p>
+                    <div id="google-login-btn" class="google-login-button"></div>
+                    <button id="login-cancel-btn" class="btn btn-secondary login-cancel-btn">キャンセル</button>
+                    <button id="login-logout-btn" class="btn btn-secondary login-cancel-btn" style="margin-top:10px;">ログアウト</button>
+                </div>
+            </div>
+        `;
+    }
 
-// ログインページを描画し、各ボタンの動作を設定する。
-export function render() {
     const cancelButton = document.getElementById("login-cancel-btn");
     const logoutButton = document.getElementById("login-logout-btn");
-
-    // キャンセルボタン押下時はタスク入力画面へ戻る。
     if (cancelButton) {
         cancelButton.addEventListener("click", () => {
-            window.location.href = "/task_input.html";
+            navigate("/tasks/new");
         });
     }
 
-    // ログアウトボタン押下時は共通モーダルを表示する。
     if (logoutButton) {
         logoutButton.addEventListener("click", () => {
             Sidebar.openLogoutModal();
         });
     }
 
-    // Googleログインボタンを描画する。
-    GoogleAuth.renderButton("google-login-button");
+    try {
+        await GoogleAuth.initialize();
+        GoogleAuth.renderButton("google-login-btn");
+    } catch (err) {
+        console.error(err);
+    }
 }

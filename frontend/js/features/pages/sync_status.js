@@ -7,6 +7,22 @@ import { Sidebar } from "../components/sidebar.js";
 
 // 同期状態ページを描画し、ログアウト操作を設定する。
 export function render() {
+    const contentView = document.getElementById("content-viewport");
+    if (!document.getElementById("sync-status-card")) {
+        contentView.innerHTML = `
+            <div class="view-container">
+                <div class="card" id="sync-status-card">
+                    <h2 class="card-title">同期ステータス</h2>
+                    <div id="sync-status-content">
+                        <p>同期状態を取得中...</p>
+                    </div>
+                    <button id="sync-now-btn" class="btn btn-primary">今すぐ同期</button>
+                    <button id="back-sync-btn" class="btn btn-secondary">戻る</button>
+                </div>
+            </div>
+        `;
+    }
+
     const messageBox = document.getElementById("sync-status-message");
     const logoutButton = document.getElementById("sync-logout-btn");
 
@@ -33,3 +49,4 @@ export function render() {
         });
     }
 }
+

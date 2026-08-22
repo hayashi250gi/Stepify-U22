@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stepify - タスク分解</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="module" src="/js/main.js"></script>
+</head>
+<body>
+    <div id="app-container">
+        <header id="header-viewport"></header>
+        <div id="main-layout">
+            <aside id="sidebar-viewport"></aside>
+            <main id="content-viewport">
+                <div class="view-container">
+                    <div class="task-detail-back-row">
+                        <button id="back-to-task-list-btn" class="btn btn-secondary task-detail-back-btn">← 一覧に戻る</button>
+                    </div>
+
+                    <div class="card">
+                        <h2 class="card-title" id="detail-task-title-placeholder">タスク詳細</h2>
+                        <p class="task-detail-description">このタスクに含まれる分解ステップ（子タスク）の状態です。</p>
+
+                        <div id="detail-task-list" class="task-detail-list"></div>
+
+                        <div class="task-detail-actions">
+                            <button id="start-task-support-btn" class="btn btn-primary">このタスクの実行支援を開始</button>
+                            <button id="delete-task-btn" class="btn btn-secondary task-detail-delete-btn">タスクを削除</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script type="module">
+        import { render } from "/js/features/pages/task_list_detail.js";
+        render();
+    </script>
+</body>
+</html>

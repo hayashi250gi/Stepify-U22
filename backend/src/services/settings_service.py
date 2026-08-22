@@ -58,15 +58,3 @@ class SettingsService:
 
         if not isinstance(notification.get("sound"), bool):
             raise ValueError("notification.sound must be boolean.")
-
-        # sync
-        sync = settings.get("sync")
-
-        if sync is None:
-            raise ValueError("sync is required.")
-
-        if not isinstance(sync.get("auto_sync"), bool):
-            raise ValueError("sync.auto_sync must be boolean.")
-
-        if not isinstance(sync.get("sync_only_wifi"), bool):
-            raise ValueError("sync.sync_only_wifi must be boolean.")

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stepify - タスク分解</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="module" src="/js/main.js"></script>
+</head>
+<body>
+    <div id="app-container">
+        <header id="header-viewport"></header>
+        <div id="main-layout">
+            <aside id="sidebar-viewport"></aside>
+            <main id="content-viewport">
+                <div class="view-container">
+                    <div class="card setting-card">
+                        <h2 class="card-title">アプリ設定</h2>
+
+                        <!-- メッセージ表示用エリア -->
+                        <div id="status-message" class="status-message" style="display: none;"></div>
+                        <div class="input-group">
+                            <label for="theme-setting">テーマ</label>
+                            <select id="theme-setting" class="input-control">
+                                <option value="system">システム設定に従う</option>
+                                <option value="light">ライトモード</option>
+                                <option value="dark">ダークモード</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label>
+                                <input type="checkbox" id="notification-enabled"> 通知を有効にする
+                            </label>
+                        </div>
+
+                        <div class="input-group">
+                            <label>
+                                <input type="checkbox" id="notification-sound"> 通知音を鳴らす
+                            </label>
+                        </div>
+
+                        <button id="save-settings-btn" class="btn btn-primary">設定を保存</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script type="module">
+        import { render } from "/js/features/pages/setting.js";
+        render();
+    </script>
+</body>
+</html>
