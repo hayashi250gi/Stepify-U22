@@ -1,12 +1,13 @@
 // タスク実行ページ。タイマー操作と完了・キャンセルの遷移を管理する。
 
 import { NotificationManager } from "/js/utils/notification.js";
-import { AppStorage } from "/js/features/storage/app_storage.js";
+import { AppStorage } from "/js/features/storage/app_storage.js?v=20260822-17";
 import { AuthState } from "/js/features/auth/auth_state.js";
 import { updateSubtaskStatus, fetchTask, saveHistory } from "/js/features/api.js";
 import { navigate } from "/js/features/router/router.js";
+import { Header } from "/js/features/components/header.js";
 
-export function render() {
+export async function render() {
     const contentView = document.getElementById("content-viewport");
 
     if (!document.getElementById("timer-display")) {
@@ -63,8 +64,9 @@ export function render() {
     updateTimerDisplay();
 
     // 実行状態をストレージに保存
-    AppStorage.saveGuestData("running_task", { taskId, subtaskId, title, minutes, startTime });
-    let timerInterval = setInterval(() => {
+    await AppStorage.saveGuestData("running_task", { taskId, subtaskId, title, minutes, startTime });
+    Header.renderRunningTask();
+    let timerInterval = setInterval(async () => {
         if (timeRemaining > 0) {
             timeRemaining--;
         updateTimerDisplay();
@@ -75,13 +77,15 @@ export function render() {
             // 通知とサウンドを再生
             NotificationManager.show("タスク時間終了", "お疲れ様でした！時間になりました。");
             NotificationManager.playCompleteSound();
-        AppStorage.clearGuestData("running_task");
+        await AppStorage.clearGuestData("running_task");
+        await Header.renderRunningTask();
     }
     }, 1000);
 
     // 完了/中断時
-    function cleanupTask() {
-        AppStorage.clearGuestData("running_task");
+    async function cleanupTask() {
+        await AppStorage.clearGuestData("running_task");
+        await Header.renderRunningTask();
     }
     const completeButton = document.getElementById("complete-task-btn");
     const cancelButton = document.getElementById("cancel-action-btn");
@@ -120,7 +124,7 @@ export function render() {
                 }
                 await AppStorage.saveHistory(taskId, subtaskId, 'complete');
             }
-            cleanupTask();
+            await cleanupTask();
 
             // 未完了サブタスクの確認
             const remainingSubtasks = task.subtasks.filter(s => s.status !== 'done');
@@ -151,7 +155,7 @@ export function render() {
                 await AppStorage.saveHistory(taskId, subtaskId, 'interrupt');
             }
             clearInterval(timerInterval);
-            cleanupTask();
+            await cleanupTask();
             navigate(`/result?status=interrupt&task_id=${taskId}&subtask_id=${subtaskId}`);
         });
     }

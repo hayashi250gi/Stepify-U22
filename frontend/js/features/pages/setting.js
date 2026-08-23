@@ -1,6 +1,6 @@
 import { navigate } from "/js/features/router/router.js";
 import { AuthState } from "/js/features/auth/auth_state.js";
-import { AppStorage } from "/js/features/storage/app_storage.js";
+import { AppStorage } from "/js/features/storage/app_storage.js?v=20260822-17";
 import { ThemeManager } from "/js/features/theme_manager.js";
 import { fetchSettings, updateSettings } from "/js/features/api.js";
 

@@ -7,6 +7,7 @@ from routes.user_route import UserRoute
 from routes.settings_route import SettingsRoute
 from routes.config_route import ConfigRoute
 from routes.ai_route import AiRoute
+from utils.auth import Auth
 
 
 
@@ -18,6 +19,10 @@ class Router:
         parsed_path = urlsplit(handler.path)
         path = parsed_path.path
         method = handler.command
+
+        public_path = path in ("/api/auth/google", "/api/config", "/api/hello", "/api/ai/decompose")
+        if path.startswith("/api/") and not public_path and not Auth.authenticate(handler):
+            return
 
         # =========================
         # GET
@@ -84,6 +89,16 @@ class Router:
             if path == "/api/tasks":
                 TaskRoute.create_task(handler)
                 return
+
+            if path == "/api/tasks/import":
+                TaskRoute.import_tasks(handler)
+                return
+
+            if path.startswith("/api/tasks/") and path.endswith("/history"):
+                parts = path.split("/")
+                if len(parts) == 5 and parts[3].isdigit():
+                    TaskRoute.save_history(handler, int(parts[3]))
+                    return
 
         # =========================
         # PUT
@@ -152,5 +167,4 @@ class Router:
         # Not Found
         # =========================
 
-        handler.send_response(404)
-        handler.end_headers()
+        Response.json(handler, 404, {"message": "Endpoint not found."})

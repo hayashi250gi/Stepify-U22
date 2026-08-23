@@ -2,8 +2,7 @@
 
 import { fetchTasks } from "../api.js";
 import { AuthState } from "../auth/auth_state.js";
-import { AppStorage } from "../storage/app_storage.js?v=20260822-14";
-import { navigate } from "../router/router.js";
+import { AppStorage } from "../storage/app_storage.js?v=20260822-36";
 
 export async function render() {
     const contentView = document.getElementById("content-viewport");
@@ -37,8 +36,31 @@ export async function render() {
         return;
     }
 
+    const createButton = document.getElementById("create-task-btn");
+    if (createButton) {
+        createButton.onclick = () => {
+            window.location.href = "/new";
+        };
+    }
+
+    const bindTaskRowEvents = () => {
+        tableBody.querySelectorAll(".clickable-row").forEach((row) => {
+            row.onclick = () => {
+                const taskId = row.dataset.taskId;
+                if (taskId) window.location.href = `/tasks/${encodeURIComponent(taskId)}`;
+            };
+        });
+    };
+    let loadedTasks = [];
+
+    const loadingFallback = setTimeout(() => {
+        if (tableBody.textContent.includes("読み込み中")) {
+            tableBody.innerHTML = "<tr><td colspan=5 style=\"text-align:center;\">タスクを読み込めませんでした。ページを再読み込みしてください。</td></tr>";
+        }
+    }, 10000);
+
     async function loadTasks() {
-    tableBody.innerHTML = "<tr><td colspan=5 style=\"text-align:center;\">読み込み中...</td></tr>";
+    tableBody.innerHTML = "<tr><td colspan=5 style=\"text-align:center;\">登録されたタスクはありません</td></tr>";
 
     try {
         let tasks = [];
@@ -46,22 +68,12 @@ export async function render() {
             // ログイン中: DBから取得
             const result = await Promise.race([
                 fetchTasks(),
-                new Promise((_, reject) => setTimeout(() => reject(new Error("タスク一覧の読み込みがタイムアウトしました。")), 8000))
+                new Promise((_, reject) => setTimeout(() => reject(new Error("タスク一覧の読み込みがタイムアウトしました。")), 5000))
             ]);
-            tasks = result.tasks || [];
+            tasks = Array.isArray(result) ? result : (result?.tasks || []);
         } else {
             // 未ログイン: IndexedDBから取得
-            const loadGuestData = () => Promise.race([
-                AppStorage.getAllData(),
-                new Promise((_, reject) => setTimeout(() => reject(new Error("ローカルデータの読み込みがタイムアウトしました。")), 3000))
-            ]);
-            let data;
-            try {
-                data = await loadGuestData();
-            } catch (error) {
-                AppStorage.close();
-                data = await loadGuestData();
-            }
+            const data = await AppStorage.getAllData();
             tasks = data.filter(item => item.id !== "user_settings" && item.data?.title).map(item => ({
                 task_id: item.id,
                 title: item.data.title,
@@ -71,6 +83,8 @@ export async function render() {
                 progress: (item.data.subtasks ? (item.data.subtasks.filter(s => s.status === 'done').length / item.data.subtasks.length) * 100 : 0)
             }));
         }
+        loadedTasks = tasks;
+
 
         const priorityOrder = { high: 3, medium: 2, low: 1, 高: 3, 中: 2, 低: 1 };
         let sortKey = "title";
@@ -130,7 +144,7 @@ export async function render() {
             row.addEventListener("click", () => {
                 const taskId = row.dataset.taskId;
                 if (taskId) {
-                    navigate(`/tasks/${taskId}`);
+                    window.location.href = `/tasks/${encodeURIComponent(taskId)}`;
                 }
             });
         });
@@ -146,12 +160,6 @@ export async function render() {
             });
         });
 
-    const createButton = document.getElementById("create-task-btn");
-    if (createButton) {
-        createButton.addEventListener("click", () => {
-                navigate("/new");
-        });
-    }
 }
         } catch (error) {
             console.error("タスク一覧の取得に失敗しました", error);
@@ -160,5 +168,18 @@ export async function render() {
     }
 
     await loadTasks();
+    clearTimeout(loadingFallback);
+    if (loadedTasks.length && !tableBody.querySelector(".clickable-row")) {
+        tableBody.innerHTML = loadedTasks.map((task) => `
+            <tr class="clickable-row" data-task-id="${task.task_id}">
+                <td><strong>${task.title}</strong></td>
+                <td>${task.deadline ? task.deadline.split('T')[0] : "-"}</td>
+                <td>${task.priority || "中"}</td>
+                <td>${task.progress ?? 0}%</td>
+                <td>${task.status || "未着手"}</td>
+            </tr>
+        `).join("");
+        bindTaskRowEvents();
+    }
 }
 

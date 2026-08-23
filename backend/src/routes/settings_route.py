@@ -12,12 +12,16 @@ class SettingsRoute:
         GET /api/users/{user_id}/settings
         """
 
+        if handler.user_id != user_id:
+            Response.json(handler, 403, {"message": "Forbidden."})
+            return
         settings = SettingsService.get_settings(user_id)
 
         if settings is None:
             Response.json(
                 handler,
-                404
+                404,
+                {"message": "Settings not found."}
             )
             return
 
@@ -32,6 +36,10 @@ class SettingsRoute:
         """
         PUT /api/users/{user_id}/settings
         """
+
+        if handler.user_id != user_id:
+            Response.json(handler, 403, {"message": "Forbidden."})
+            return
 
         try:
             content_length = int(

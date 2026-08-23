@@ -109,7 +109,8 @@ export class AuthState {
      */
     static setCookie(name, value, maxAgeSeconds) {
         const expires = new Date(Date.now() + maxAgeSeconds * 1000).toUTCString();
-        document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAgeSeconds}; expires=${expires}; SameSite=Lax`;
+        const secure = window.location.protocol === "https:" ? "; Secure" : "";
+        document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAgeSeconds}; expires=${expires}; SameSite=Lax${secure}`;
     }
 
     /**

@@ -135,6 +135,38 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-shrink: 0;
+}
+
+.header-running-task {
+    min-width: 0;
+    margin-left: auto;
+    margin-right: 12px;
+}
+
+.header-running-task-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 360px;
+    padding: 5px 12px;
+    background: #333;
+    border-radius: 20px;
+    color: white;
+    text-decoration: none;
+}
+
+.header-running-task-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.header-running-task-timer {
+    flex: 0 0 42px;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
 }
 
 .status-indicator {
@@ -486,6 +518,7 @@ body {
 /* テーブル & リスト表示 */
 .data-table {
     width: 100%;
+    min-width: 620px;
     border-collapse: collapse;
 }
 
@@ -500,6 +533,7 @@ body {
     background-color: var(--bg-sidebar);
     font-weight: 600;
     color: var(--text-primary);
+    white-space: nowrap;
 }
 
 .clickable-row {
@@ -603,7 +637,8 @@ body {
 .task-suggestion-meta {
     width: 100%;
     padding: 20px; /* 余白を少し大きく */
-    background: #f9f9f9;
+    background: var(--bg-card);
+    color: var(--text-primary);
     border-radius: 12px;
     font-size: 0.95rem;
     box-sizing: border-box; /* パディングを含めた幅計算 */
@@ -835,6 +870,12 @@ body {
     font-size: 14px;
 }
 
+.task-detail-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
 .task-list-card {
     padding: 0;
     overflow-x: auto;
@@ -849,6 +890,7 @@ body {
     font: inherit;
     font-weight: 600;
     padding: 4px 0;
+    white-space: nowrap;
 }
 
 .task-sort-btn:hover,
@@ -903,6 +945,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    margin-bottom: 24px;
 }
 
 .task-detail-item {
@@ -931,7 +974,7 @@ body {
 }
 
 .task-detail-item-complete {
-    background: #f9f9f9;
+    background: var(--bg-sidebar);
 }
 
 .task-detail-item-status-complete {
@@ -1161,6 +1204,60 @@ body {
         padding: 16px;
         height: calc(100vh - 60px);
         /* モバイルは全体スクロールを許容 */
+    }
+
+    .header-bar {
+        padding: 0 10px;
+        gap: 8px;
+    }
+
+    .header-left {
+        flex-shrink: 0;
+        gap: 8px;
+    }
+
+    .header-running-task {
+        flex: 1 1 auto;
+        margin: 0;
+    }
+
+    .header-running-task-link {
+        max-width: none;
+        padding: 5px 8px;
+        gap: 5px;
+        font-size: 12px;
+    }
+
+    .header-running-task-timer {
+        flex-basis: 36px;
+    }
+
+    .header-auth {
+        gap: 0;
+    }
+
+    .status-indicator {
+        padding: 4px 6px;
+        font-size: 11px;
+    }
+
+    .task-list-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .task-list-create-btn {
+        width: 100%;
+    }
+
+    .task-detail-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .task-detail-actions .btn {
+        width: 100%;
     }
 
     .result-breakdown-step-card {

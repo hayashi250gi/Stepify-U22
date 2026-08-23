@@ -1,14 +1,14 @@
 // URL 操作ユーティリティ。
 // SPA用のページ遷移は廃止し、window.location.href による画面遷移に統一する。
 
-import { render as renderTaskList } from "../pages/task_list.js?v=20260822-12";
+import { render as renderTaskList } from "../pages/task_list.js?v=20260822-36";
 import { render as renderTaskDetail } from "../pages/task_list_detail.js";
 import { render as renderTaskInput } from "../pages/task_input.js";
 import { render as renderTaskSuggestion } from "../pages/task_suggestion.js?v=20260822-4";
 import { render as renderTaskExecution } from "../pages/task_execution.js";
 import { render as renderTaskExecutionResult } from "../pages/task_execution_result.js?v=20260822";
 import { render as renderHowToUse } from "../pages/how_to_use.js";
-import { render as renderLogin } from "../pages/login.js";
+import { render as renderLogin } from "../pages/login.js?v=20260823-2";
 import { render as renderSettings } from "../pages/setting.js";
 
 // frontend/js/features/router/router.js
@@ -55,9 +55,9 @@ export function handleRoute() {
 
     const contentView = document.getElementById("content-viewport");
 
-    // ルートアクセス時のリダイレクト先を /tasks/new に変更
+    // ルートアクセス時はタスク入力画面へ遷移する
     if (path === '/') {
-        window.history.replaceState(null, '', '/tasks/new');
+        window.history.replaceState(null, '', '/new');
         contentView.innerHTML = ''; // クリアしてからrender
         renderTaskInput();
         return;

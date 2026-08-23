@@ -12,3 +12,6 @@ backups/
 postgres_data/
 
 *.log
+
+nginx/ssl/
+letsencrypt/

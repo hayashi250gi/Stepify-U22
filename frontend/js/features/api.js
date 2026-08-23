@@ -18,6 +18,10 @@ export async function createTask(title, description, subtasks, priority, deadlin
     });
 }
 
+export async function importTasks(tasks) {
+    return ApiClient.post("/api/tasks/import", { tasks });
+}
+
 export async function deleteTask(taskId) {
     return ApiClient.delete(`/api/tasks/${taskId}`);
 }

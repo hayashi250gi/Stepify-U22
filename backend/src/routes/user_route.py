@@ -12,11 +12,13 @@ class UserRoute:
         GET /api/users/{user_id}
         """
 
+        if handler.user_id != user_id:
+            Response.json(handler, 403, {"message": "Forbidden."})
+            return
         user = UserService.get_user(user_id)
 
         if user is None:
-            handler.send_response(404)
-            handler.end_headers()
+            Response.json(handler, 404, {"message": "User not found."})
             return
 
         Response.json(
@@ -30,6 +32,10 @@ class UserRoute:
         """
         PUT /api/users/{user_id}
         """
+
+        if handler.user_id != user_id:
+            Response.json(handler, 403, {"message": "Forbidden."})
+            return
 
         try:
             content_length = int(
@@ -97,6 +103,9 @@ class UserRoute:
         DELETE /api/users/{user_id}
         """
 
+        if handler.user_id != user_id:
+            Response.json(handler, 403, {"message": "Forbidden."})
+            return
         UserService.delete_user(user_id)
 
         handler.send_response(204)

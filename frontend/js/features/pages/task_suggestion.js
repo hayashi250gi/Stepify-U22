@@ -1,6 +1,6 @@
 // タスク提案ページ。実行開始・スキップ・キャンセルの操作を受け付ける。
 import { suggestTask } from "/js/features/api.js";
-import { AppStorage } from "/js/features/storage/app_storage.js";
+import { AppStorage } from "/js/features/storage/app_storage.js?v=20260822-17";
 import { AuthState } from "/js/features/auth/auth_state.js";
 import { navigate } from "/js/features/router/router.js";
 

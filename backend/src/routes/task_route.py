@@ -4,6 +4,7 @@ import json
 
 from services.task_service import TaskService
 from utils.response import Response
+from repositories.task_history_repository import TaskHistoryRepository
 
 
 class TaskRoute:
@@ -11,7 +12,7 @@ class TaskRoute:
     def get_task(handler, task_id):
         """タスクを取得する"""
         
-        task = TaskService.get_task(task_id)
+        task = TaskService.get_task(task_id, handler.user_id)
 
         ## taskが存在しない場合の処理
         if task is None:
@@ -46,9 +47,7 @@ class TaskRoute:
 
             data = json.loads(body.decode("utf-8"))
 
-            # TODO
-            # 認証実装後はJWTから取得する
-            user_id = 1
+            user_id = handler.user_id
 
             description = data.get("description")
             subtasks = data.get("subtasks", [])
@@ -84,6 +83,28 @@ class TaskRoute:
             )
 
     @staticmethod
+    def import_tasks(handler):
+        try:
+            content_length = int(handler.headers.get("Content-Length", 0))
+            data = json.loads(handler.rfile.read(content_length).decode("utf-8"))
+            tasks = data.get("tasks", [])
+            if not isinstance(tasks, list):
+                raise ValueError("tasks must be a list.")
+            imported = []
+            for task in tasks:
+                imported.append(TaskService.create_task(
+                    user_id=handler.user_id,
+                    title=task["title"],
+                    description=task.get("description"),
+                    subtasks=task.get("subtasks", []),
+                    deadline=task.get("deadline"),
+                    priority=task.get("priority", "medium")
+                ))
+            Response.json(handler, 200, {"task_ids": imported, "message": "Tasks imported."})
+        except (ValueError, KeyError, TypeError, json.JSONDecodeError) as error:
+            Response.json(handler, 400, {"message": str(error)})
+
+    @staticmethod
     def update_task(handler, task_id):
 
         try:
@@ -96,9 +117,7 @@ class TaskRoute:
 
             data = json.loads(body.decode("utf-8"))
 
-            # TODO
-            # JWT認証実装後はトークンから取得する
-            user_id = 1
+            user_id = handler.user_id
 
             updated_task_id = TaskService.update_task(
                 task_id=task_id,
@@ -114,7 +133,7 @@ class TaskRoute:
 
                 Response.json(
                     handler,
-                    400,
+                    404,
                     {
                         "message": "Task not found."
                     }
@@ -157,9 +176,7 @@ class TaskRoute:
 
         try:
 
-            # TODO
-            # JWTから取得
-            user_id = 1
+            user_id = handler.user_id
 
             deleted_task_id = TaskService.delete_task(
                 task_id,
@@ -170,7 +187,7 @@ class TaskRoute:
 
                 Response.json(
                     handler,
-                    400,
+                    404,
                     {
                         "message": "Task not found."
                     }
@@ -201,7 +218,7 @@ class TaskRoute:
     @staticmethod
     def list_tasks(handler):
 
-        tasks = TaskService.list_tasks()
+        tasks = TaskService.list_tasks(handler.user_id)
 
         Response.json(
                 handler,
@@ -214,7 +231,7 @@ class TaskRoute:
     @staticmethod
     def get_suggestion(handler, task_id=None):
         """次にやるべきタスクを提案する"""
-        suggestion = TaskService.suggest_next_subtask(task_id)
+        suggestion = TaskService.suggest_next_subtask(task_id, handler.user_id)
 
         if suggestion is None:
             Response.json(handler, 200, {"message": "No tasks to do."})
@@ -230,9 +247,31 @@ class TaskRoute:
             data = json.loads(body.decode("utf-8"))
 
             # サービス層でステータス更新
-            TaskService.update_subtask_status(task_id, subtask_id, data['status'])
+            TaskService.update_subtask_status(task_id, subtask_id, data['status'], handler.user_id)
 
             Response.json(handler, 200, {"message": "Subtask updated."})
         except Exception as e:
             Response.json(handler, 500, {"message": str(e)})
+
+    @staticmethod
+    def save_history(handler, task_id):
+        try:
+            content_length = int(handler.headers.get("Content-Length", 0))
+            data = json.loads(handler.rfile.read(content_length).decode("utf-8"))
+            task = TaskService.get_task(task_id, handler.user_id)
+            if task is None:
+                Response.json(handler, 404, {"message": "Task not found."})
+                return
+            action = data.get("action", "complete")
+            if action not in ("complete", "interrupt", "skip", "execution"):
+                raise ValueError("Invalid history action.")
+            subtask_id = data.get("subtaskId")
+            if subtask_id is not None and not any(
+                str(subtask["subtask_id"]) == str(subtask_id) for subtask in task["subtasks"]
+            ):
+                raise ValueError("Subtask does not belong to task.")
+            TaskHistoryRepository.save_history(task_id, subtask_id, action)
+            Response.json(handler, 200, {"message": "History saved."})
+        except (ValueError, KeyError, TypeError) as error:
+            Response.json(handler, 400, {"message": str(error)})
 

@@ -1,17 +1,33 @@
 import { AuthApi } from "../api/auth_api.js";
 import { Config } from "../../config.js";
 import { AuthState } from "./auth_state.js";
-import { AppStorage } from "../storage/app_storage.js";
+import { AppStorage } from "../storage/app_storage.js?v=20260822-17";
 import { Sidebar } from "../components/sidebar.js";
+import { importTasks } from "../api.js";
 
 // Googleログインと認証状態管理の流れを担当するモジュール。
 export class GoogleAuth {
+    static initialized = false;
+    static initializePromise = null;
 
     /**
      * Google Identity Services を初期化する。
      * 既に読み込み済みなら再利用し、未ロード時のみスクリプトを追加する。
      */
     static async initialize() {
+        if (this.initialized) return;
+        if (this.initializePromise) return this.initializePromise;
+
+        this.initializePromise = this.initializeInternal();
+        try {
+            await this.initializePromise;
+            this.initialized = true;
+        } finally {
+            this.initializePromise = null;
+        }
+    }
+
+    static async initializeInternal() {
         await new Promise((resolve, reject) => {
             if (window.google?.accounts) {
                 resolve();
@@ -86,6 +102,16 @@ export class GoogleAuth {
 
             AuthState.saveAuthState(result.user, result.token);
             await AppStorage.initialize();
+
+            const localTasks = (await AppStorage.getAllData())
+                .filter(item => item.id !== "user_settings" && item.id !== "action_history" && item.data?.title)
+                .map(item => item.data);
+            if (localTasks.length > 0) {
+                await importTasks(localTasks);
+                await Promise.all((await AppStorage.getAllData())
+                    .filter(item => item.id !== "user_settings" && item.id !== "action_history" && item.data?.title)
+                    .map(item => AppStorage.clearGuestData(item.id)));
+            }
 
             // サイドバーのアカウント表示を即時反映する。
             if (typeof Sidebar?.renderAccountCard === "function") {

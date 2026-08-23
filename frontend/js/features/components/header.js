@@ -1,12 +1,13 @@
 // ヘッダーを表示するモジュール
 
 import { AuthState } from "../auth/auth_state.js";
-import { AppStorage } from "../storage/app_storage.js";
+import { AppStorage } from "../storage/app_storage.js?v=20260822-17";
 
 // ヘッダーのメニュートグルボタンとサイドバーの開閉状態を管理するモジュール。
 export class Header {
     static toggleButton = null;
     static sidebar = null;
+    static runningTaskInterval = null;
 
     static async initialize() {
 
@@ -51,33 +52,41 @@ export class Header {
     }
 
     static async renderRunningTask() {
+        if (this.runningTaskInterval) {
+            clearInterval(this.runningTaskInterval);
+            this.runningTaskInterval = null;
+        }
+        const existingEl = document.getElementById("header-running-task");
+        if (existingEl) existingEl.remove();
+
         const runningTask = await AppStorage.loadGuestData("running_task");
         if (!runningTask) return;
 
         const headerBar = document.querySelector(".header-bar");
-        const existingEl = document.getElementById("header-running-task");
-        if (existingEl) existingEl.remove();
+        if (!headerBar) return;
 
         const runningEl = document.createElement("div");
         runningEl.id = "header-running-task";
         runningEl.className = "header-running-task";
         runningEl.innerHTML = `
-            <a href="/tasks/execute?task_id=${runningTask.taskId}&subtask_id=${runningTask.subtaskId}&title=${encodeURIComponent(runningTask.title)}&minutes=${runningTask.minutes}&start_time=${runningTask.startTime}"
-               style="color: white; text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 5px 15px; background: #333; border-radius: 20px;">
-                <span>実行中: ${runningTask.title}</span>
-                <span id="header-timer">--:--</span>
+            <a href="/execute?task_id=${runningTask.taskId}&subtask_id=${runningTask.subtaskId}&title=${encodeURIComponent(runningTask.title)}&minutes=${runningTask.minutes}&start_time=${runningTask.startTime}"
+               class="header-running-task-link">
+                <span class="header-running-task-title">実行中: ${runningTask.title}</span>
+                <span id="header-timer" class="header-running-task-timer">--:--</span>
             </a>
         `;
         headerBar.insertBefore(runningEl, headerBar.querySelector(".header-auth"));
 
-        setInterval(() => {
+        const updateHeaderTimer = () => {
             const elapsed = Math.floor((Date.now() - new Date(runningTask.startTime).getTime()) / 1000);
             const remaining = Math.max(0, runningTask.minutes * 60 - elapsed);
             const m = Math.floor(remaining / 60);
             const s = remaining % 60;
             const timerEl = document.getElementById("header-timer");
             if (timerEl) timerEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-        }, 1000);
+        };
+        updateHeaderTimer();
+        this.runningTaskInterval = setInterval(updateHeaderTimer, 1000);
     }
 
     static updateToggleButtonState(isOpen) {

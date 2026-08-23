@@ -2,7 +2,7 @@
 
 import { createTask } from "../api.js";
 import { appState } from "../state.js";
-import { AppStorage } from "../storage/app_storage.js";
+import { AppStorage } from "../storage/app_storage.js?v=20260822-17";
 import { AuthState } from "../auth/auth_state.js";
 import { navigate } from "../router/router.js";
 

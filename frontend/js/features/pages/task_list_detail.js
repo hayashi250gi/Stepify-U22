@@ -2,7 +2,7 @@
 
 import { fetchTask, deleteTask, updateTask } from "/js/features/api.js";
 import { AuthState } from "/js/features/auth/auth_state.js";
-import { AppStorage } from "/js/features/storage/app_storage.js";
+import { AppStorage } from "/js/features/storage/app_storage.js?v=20260822-17";
 import { handleRoute, navigate } from "/js/features/router/router.js";
 
 export async function render(taskIdFromRouter = null) {
@@ -153,15 +153,18 @@ export async function render(taskIdFromRouter = null) {
             detailList.innerHTML = detailHtml;
             detailActions.innerHTML = `
                 <button id="edit-task-btn" class="btn btn-secondary">編集</button>
-                <button id="start-task-support-btn" class="btn btn-primary">このタスクを実行</button>
+                ${progress < 100 ? '<button id="start-task-support-btn" class="btn btn-primary">このタスクを実行</button>' : ''}
                 <button id="delete-task-btn" class="btn btn-secondary task-detail-delete-btn">タスクを削除</button>
             `;
             document.getElementById("edit-task-btn").addEventListener("click", () => renderView(true));
 
             // 詳細画面の「実行支援」ボタン
-            document.getElementById("start-task-support-btn").addEventListener("click", () => {
-                navigate(`/suggest?task_id=${taskId}`);
-            });
+            const startButton = document.getElementById("start-task-support-btn");
+            if (startButton) {
+                startButton.addEventListener("click", () => {
+                    navigate(`/suggest?task_id=${taskId}`);
+                });
+            }
             document.getElementById("delete-task-btn").addEventListener("click", deleteHandler);
     }
     }

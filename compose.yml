@@ -3,10 +3,12 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - "127.0.0.1:8080:80"
+      - "80:80"
+      - "443:443"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./frontend:/usr/share/nginx/html
+      - ./letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - backend
 
@@ -29,7 +31,7 @@ services:
 
     environment:
       POSTGRES_USER: stepify
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD must be set}
       POSTGRES_DB: stepify
 
     volumes:

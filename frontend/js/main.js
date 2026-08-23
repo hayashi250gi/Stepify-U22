@@ -1,11 +1,12 @@
 import { Config } from "./config.js";
-import { Header } from "/js/features/components/header.js";
+import { Header } from "/js/features/components/header.js?v=20260822-2";
 import { Sidebar } from "/js/features/components/sidebar.js";
 import { GoogleAuth } from "/js/features/auth/google_auth.js";
-import { AppStorage } from "/js/features/storage/app_storage.js?v=20260822-10";
+import { AppStorage } from "/js/features/storage/app_storage.js?v=20260822-17";
 import { AuthState } from "/js/features/auth/auth_state.js";
 import { ThemeManager } from "./features/theme_manager.js";
-import { handleRoute, navigate } from "/js/features/router/router.js?v=20260822-9";
+import { fetchSettings } from "./features/api.js";
+import { handleRoute, navigate } from "/js/features/router/router.js?v=20260822-36";
 
 window.addEventListener("DOMContentLoaded", async () => {
     try {
@@ -24,8 +25,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             const userId = userState?.user?.user_id;
             if (userId) {
                 try {
-                    const response = await fetch(`/api/users/${userId}/settings`);
-                    if (response.ok) settings = await response.json();
+                    settings = await fetchSettings(userId);
                 } catch (e) { console.error("API設定取得失敗", e); }
             }
         } else {

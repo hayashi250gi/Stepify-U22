@@ -6,7 +6,7 @@ from database.database import Database
 class UserRepository:
 
     @staticmethod
-    def create_user(user_id: int, email: str, display_name: str) -> None:
+    def create_user(google_sub: str, display_name: str) -> int:
         """
         ユーザーとデフォルト設定を新規作成する
         """
@@ -16,21 +16,25 @@ class UserRepository:
                 # ユーザー作成
                 cursor.execute(
                     """
-                    INSERT INTO users (user_id, email, display_name)
-                    VALUES (%s, %s, %s);
+                    INSERT INTO users (google_sub, display_name)
+                    VALUES (%s, %s)
+                    RETURNING user_id;
                     """,
-                    (user_id, email, display_name),
+                    (google_sub, display_name),
                 )
+                user_id = cursor.fetchone()[0]
 
                 # デフォルト設定作成
                 cursor.execute(
                     """
-                    INSERT INTO user_settings (user_id, appearance, notification)
-                    VALUES (%s, %s, %s);
+                    INSERT INTO settings (user_id)
+                    VALUES (%s)
+                    ON CONFLICT (user_id) DO NOTHING;
                     """,
-                    (user_id, '{"theme": "system"}', '{"enabled": true, "sound": true}'),
+                    (user_id,),
                 )
             connection.commit()
+        return user_id
 
     @staticmethod
     def get_user(user_id: int) -> dict | None:

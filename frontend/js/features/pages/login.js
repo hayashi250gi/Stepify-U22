@@ -2,9 +2,11 @@
 import { navigate } from "/js/features/router/router.js";
 import { GoogleAuth } from "/js/features/auth/google_auth.js";
 import { Sidebar } from "/js/features/components/sidebar.js";
+import { AuthState } from "/js/features/auth/auth_state.js";
 
 export async function render() {
     const contentView = document.getElementById("content-viewport");
+    const isLoggedIn = AuthState.isLoggedIn();
     if (!document.getElementById("login-card")) {
         contentView.innerHTML = `
             <div class="view-container mainmenu-view">
@@ -13,7 +15,7 @@ export async function render() {
                     <p class="login-description">データを同期するためにログインしてください。</p>
                     <div id="google-login-btn" class="google-login-button"></div>
                     <button id="login-cancel-btn" class="btn btn-secondary login-cancel-btn">キャンセル</button>
-                    <button id="login-logout-btn" class="btn btn-secondary login-cancel-btn" style="margin-top:10px;">ログアウト</button>
+                    ${isLoggedIn ? '<button id="login-logout-btn" class="btn btn-secondary login-cancel-btn" style="margin-top:10px;">ログアウト</button>' : ''}
                 </div>
             </div>
         `;
@@ -21,9 +23,12 @@ export async function render() {
 
     const cancelButton = document.getElementById("login-cancel-btn");
     const logoutButton = document.getElementById("login-logout-btn");
+    if (!isLoggedIn && logoutButton) {
+        logoutButton.remove();
+    }
     if (cancelButton) {
         cancelButton.addEventListener("click", () => {
-            navigate("/tasks/new");
+            navigate("/new");
         });
     }
 

@@ -7,9 +7,9 @@ class TaskService:
     """タスクのサービスクラス"""
 
     @staticmethod
-    def get_task(task_id: int):
+    def get_task(task_id: int, user_id: int):
         """タスクを取得する"""
-        return TaskRepository.get_task(task_id)
+        return TaskRepository.get_task(task_id, user_id)
 
     @staticmethod
     def create_task(user_id: int, title: str, description: str | None = None, subtasks: list | None = None, deadline: str | None = None, priority: str = 'medium'):
@@ -22,11 +22,26 @@ class TaskService:
         if len(title) > 255:
             raise ValueError("Title must be 255 characters or less")
 
+        if description is not None and len(description) > 5000:
+            raise ValueError("Description must be 5000 characters or less.")
+
         if subtasks is None:
             subtasks = []
 
         if not isinstance(subtasks, list):
             raise ValueError("Subtasks must be a list.")
+
+        if priority not in ("low", "medium", "high"):
+            raise ValueError("Priority must be low, medium, or high.")
+
+        for subtask in subtasks:
+            if not isinstance(subtask, dict):
+                raise ValueError("Each subtask must be an object.")
+            if not str(subtask.get("title", "")).strip():
+                raise ValueError("Subtask title is required.")
+            minutes = subtask.get("estimated_minutes")
+            if minutes is not None and (not isinstance(minutes, int) or not 5 <= minutes <= 60):
+                raise ValueError("Estimated minutes must be between 5 and 60.")
         
         task_id = TaskRepository.create_task(
             user_id=user_id,
@@ -52,8 +67,22 @@ class TaskService:
         if len(title) > 255:
             raise ValueError("Task title must be 255 characters or less.")
 
+        if description is not None and len(description) > 5000:
+            raise ValueError("Description must be 5000 characters or less.")
+
+        if priority not in ("low", "medium", "high"):
+            raise ValueError("Priority must be low, medium, or high.")
+
+        if subtasks is not None:
+            if not isinstance(subtasks, list):
+                raise ValueError("Subtasks must be a list.")
+            for subtask in subtasks:
+                if not isinstance(subtask, dict) or not str(subtask.get("title", "")).strip():
+                    raise ValueError("Each subtask must have a title.")
+
         updated_task_id = TaskRepository.update_task(
             task_id=task_id,
+            user_id=user_id,
             title=title,
             description=description,
             subtasks=subtasks,
@@ -67,34 +96,29 @@ class TaskService:
     def delete_task(task_id: int, user_id: int):
         """タスクを削除する"""
 
-        task = TaskRepository.get_task(task_id)
+        task = TaskRepository.get_task(task_id, user_id)
 
         if task is None:
             return None
 
-        # TODO
-        # JWT認証後
-        # task["user_id"] == user_id を確認
-        # 一致しない場合は PermissionError
-
-        deleted_task_id = TaskRepository.delete_task(task_id)
+        deleted_task_id = TaskRepository.delete_task(task_id, user_id)
 
         return deleted_task_id
     
 
     @staticmethod
-    def list_tasks():
+    def list_tasks(user_id: int):
         """タスクの一覧を取得する"""
-        return TaskRepository.list_tasks()
+        return TaskRepository.list_tasks(user_id)
 
     @staticmethod
-    def update_subtask_status(task_id: int, subtask_id: int, status: str):
-        TaskRepository.update_subtask_status(task_id, subtask_id, status)
+    def update_subtask_status(task_id: int, subtask_id: int, status: str, user_id: int):
+        TaskRepository.update_subtask_status(task_id, subtask_id, status, user_id)
 
     @staticmethod
-    def suggest_next_subtask(task_id: int | None = None):
+    def suggest_next_subtask(task_id: int | None = None, user_id: int | None = None):
         """優先度と締め切り、実行順に基づいて次のサブタスクを提案する。"""
-        tasks = TaskRepository.list_tasks_with_subtasks()
+        tasks = TaskRepository.list_tasks_with_subtasks(user_id)
         if task_id is not None:
             tasks = [task for task in tasks if task["task_id"] == task_id]
 

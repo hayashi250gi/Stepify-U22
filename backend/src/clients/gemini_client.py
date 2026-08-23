@@ -8,7 +8,8 @@ from config.config import Config
 class GeminiClient:
 
     _client = genai.Client(
-        api_key=Config.GEMINI_API_KEY
+        api_key=Config.GEMINI_API_KEY,
+        http_options=types.HttpOptions(timeout=10000),
     )
 
     @staticmethod
