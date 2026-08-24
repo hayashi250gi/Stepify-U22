@@ -1,12 +1,21 @@
 # Stepify
 
-## Development environment using:
-- nginx
-- raw python
-- postgresql
-- docker compose
+## 概要
 
-## 必要機能
+### 説明
+- タスクの実行を支援するWebアプリケーション。
+- U22プログラミングコンテスト応募のため作成。
+
+## Using:
+- nginx
+- html
+- css
+- js
+- python
+- postgresql
+- docker
+
+## 機能
 
 ### タスク関連機能
 - タスクのユーザー入力、AI分解・出力
@@ -25,9 +34,3 @@
 
 ## updated history
 
-06/30 
-html builded
-
-07/02 
-js builded
-js updated 
