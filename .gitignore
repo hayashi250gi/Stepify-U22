@@ -1,17 +1,35 @@
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
 
+# Local environment and secrets
 .env
+.env.*
+!.env.example
 
 node_modules/
 
+# Local editor and tool settings
 .vscode/
+.continue/
 
+# Local data and generated files
 backups/
-
 postgres_data/
+
+*.sql.gz
+*.dump
+*.sqlite
+*.sqlite3
 
 *.log
 
+# TLS certificates and private keys
 nginx/ssl/
 letsencrypt/
+*.pem
+*.key
