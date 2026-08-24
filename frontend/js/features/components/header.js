@@ -35,9 +35,16 @@ export class Header {
 
         Header.updateToggleButtonState(false);
 
-        Header.toggleButton.addEventListener("click", () => {
+        Header.toggleButton.addEventListener("click", (event) => {
+            event.stopPropagation();
             const isOpen = Header.sidebar.classList.toggle("open");
             Header.updateToggleButtonState(isOpen);
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!Header.sidebar.classList.contains("open")) return;
+            if (Header.sidebar.contains(event.target) || Header.toggleButton.contains(event.target)) return;
+            Header.closeMenu();
         });
     }
 

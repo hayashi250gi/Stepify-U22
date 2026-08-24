@@ -80,7 +80,8 @@ body {
 #app-container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
 }
 
 #header-viewport {
@@ -93,7 +94,8 @@ body {
 #main-layout {
     display: flex;
     flex: 1;
-    height: calc(100vh - var(--layout-header-height));
+    height: calc(100dvh - var(--layout-header-height));
+    min-height: 0;
     position: relative;
 }
 
@@ -107,7 +109,8 @@ body {
 }
 #content-viewport {
     flex: 1;
-    height: calc(100vh - var(--layout-header-height));
+    height: calc(100dvh - var(--layout-header-height));
+    min-height: 0;
     /* 要件指定: 90vhのダッシュボードレイアウト */
     overflow-y: auto;
     padding: 24px;
@@ -1191,7 +1194,10 @@ body {
         position: absolute;
         left: -240px;
         top: 0;
-        bottom: 0;
+        height: calc(100dvh - var(--layout-header-height));
+        max-height: calc(100svh - var(--layout-header-height));
+        overflow-y: auto;
+        padding-bottom: env(safe-area-inset-bottom);
         z-index: 90;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     }
@@ -1202,7 +1208,8 @@ body {
 
     #content-viewport {
         padding: 16px;
-        height: calc(100vh - 60px);
+        height: calc(100dvh - var(--layout-header-height));
+        min-height: 0;
         /* モバイルは全体スクロールを許容 */
     }
 
@@ -1234,6 +1241,58 @@ body {
 
     .header-auth {
         gap: 0;
+    }
+
+    .task-edit-form {
+        padding: 12px;
+    }
+
+    .task-edit-form > div[style*="display: flex"] {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px !important;
+    }
+
+    .task-edit-form > div[style*="display: flex"] > div {
+        min-width: 0;
+    }
+
+    .task-edit-form input,
+    .task-edit-form textarea,
+    .task-edit-form select {
+        max-width: 100%;
+    }
+
+    .subtask-edit-row {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) 58px 40px;
+        gap: 6px !important;
+    }
+
+    .subtask-edit-row .subtask-title {
+        min-width: 0;
+    }
+
+    .subtask-edit-row .subtask-minutes {
+        width: 58px !important;
+    }
+
+    .subtask-edit-row button {
+        min-height: 36px;
+        padding: 6px 8px;
+    }
+
+    .subtask-edit-row .move-up-btn {
+        grid-column: 1;
+    }
+
+    .subtask-edit-row .move-down-btn,
+    .subtask-edit-row .remove-subtask-btn {
+        grid-column: 2;
+    }
+
+    .subtask-edit-row .remove-subtask-btn {
+        grid-column: 3;
     }
 
     .status-indicator {

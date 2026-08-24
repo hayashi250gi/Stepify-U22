@@ -85,31 +85,6 @@ CREATE TABLE IF NOT EXISTS task_histories (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-ALTER TABLE task_histories ADD COLUMN IF NOT EXISTS started_at TIMESTAMP;
-ALTER TABLE task_histories ADD COLUMN IF NOT EXISTS finished_at TIMESTAMP;
-ALTER TABLE task_histories ADD COLUMN IF NOT EXISTS duration_seconds INTEGER;
-ALTER TABLE task_histories ADD COLUMN IF NOT EXISTS source_execution_log_id INTEGER UNIQUE;
-
--- 既存のexecution_logsをtask_historiesへ移行して廃止する。
-DO $$
-BEGIN
-    IF to_regclass('public.execution_logs') IS NOT NULL THEN
-        INSERT INTO task_histories (
-            task_id, subtask_id, action, started_at, finished_at,
-            duration_seconds, source_execution_log_id
-        )
-        SELECT
-            t.task_id, el.subtask_id, 'execution', el.started_at, el.finished_at,
-            el.duration_seconds, el.execution_log_id
-        FROM execution_logs el
-        JOIN subtasks s ON s.subtask_id = el.subtask_id
-        JOIN tasks t ON t.task_id = s.task_id
-        ON CONFLICT (source_execution_log_id) DO NOTHING;
-
-        DROP TABLE execution_logs;
-    END IF;
-END $$;
-
 -- 設定テーブル
 CREATE TABLE IF NOT EXISTS settings (
 
