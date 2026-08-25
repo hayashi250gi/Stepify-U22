@@ -229,6 +229,12 @@ class TaskRoute:
             )
 
     @staticmethod
+    def get_recent_history(handler):
+        """ログインユーザーの直近一週間の実行履歴を取得する。"""
+        history = TaskHistoryRepository.get_recent_history(handler.user_id)
+        Response.json(handler, 200, {"history": history})
+
+    @staticmethod
     def get_suggestion(handler, task_id=None):
         """次にやるべきタスクを提案する"""
         suggestion = TaskService.suggest_next_subtask(task_id, handler.user_id)

@@ -51,3 +51,7 @@ export async function saveHistory(taskId, subtaskId, action) {
     return ApiClient.post(`/api/tasks/${taskId}/history`, { subtaskId, action });
 }
 
+export async function fetchRecentHistory() {
+    return ApiClient.get("/api/tasks/history/recent");
+}
+

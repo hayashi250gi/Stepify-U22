@@ -226,6 +226,27 @@ export class AppStorage {
     }
 
     /**
+     * IndexedDB に保存されているアクション履歴を取得する。
+     * @returns {Promise<Array<{taskId: string, subtaskId: string, action: string, timestamp: string}>>}
+     */
+    static async getHistory() {
+        try {
+            const database = await this.initialize();
+
+            return new Promise((resolve, reject) => {
+                const transaction = database.transaction(this.storeName, "readonly");
+                const store = transaction.objectStore(this.storeName);
+                const request = store.get("action_history");
+
+                request.onsuccess = () => resolve(request.result?.data || []);
+                request.onerror = () => reject(new Error("履歴の取得に失敗しました。"));
+            });
+        } catch (error) {
+            throw new Error(error.message || "履歴の取得に失敗しました。");
+        }
+    }
+
+    /**
      * 保存データの件数を取得する。
      * @returns {Promise<number>}
      */

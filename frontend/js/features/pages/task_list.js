@@ -118,7 +118,8 @@ export async function render() {
             tableBody.innerHTML = "<tr><td colspan=5 style=\"text-align:center;\">登録されたタスクはありません</td></tr>";
         } else {
         tableBody.innerHTML = tasks.map((task) => {
-            const progress = task.progress ?? 0;
+            const progress = Number(task.progress ?? 0);
+            const progressLabel = progress.toFixed(1);
             const statusLabel = task.status || "未着手";
             const deadlineLabel = task.deadline ? task.deadline.split('T')[0] : "-";
             const priorityLabel = task.priority || "中";
@@ -132,7 +133,7 @@ export async function render() {
                     <td>
                         <div style="display:flex; align-items:center; gap:8px;">
                             <div class="progress-container" style="width: 80px;"><div class="progress-bar" style="width: ${progress}%;"></div></div>
-                            <span>${progress}%</span>
+                            <span>${progressLabel}%</span>
                         </div>
                     </td>
                     <td><span style="color:${statusColor};">${statusLabel}</span></td>
@@ -175,7 +176,7 @@ export async function render() {
                 <td><strong>${task.title}</strong></td>
                 <td>${task.deadline ? task.deadline.split('T')[0] : "-"}</td>
                 <td>${task.priority || "中"}</td>
-                <td>${task.progress ?? 0}%</td>
+                <td>${Number(task.progress ?? 0).toFixed(1)}%</td>
                 <td>${task.status || "未着手"}</td>
             </tr>
         `).join("");

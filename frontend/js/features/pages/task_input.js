@@ -1,8 +1,77 @@
 // 分解タスク入力ページ。ユーザー入力を受けてAIへ分解依頼を送る。
 
+import { fetchRecentHistory } from "../api.js";
 import { AiApi } from "../api/ai_api.js";
+import { AuthState } from "../auth/auth_state.js";
 import { appState } from "../state.js";
 import { navigate } from "../router/router.js";
+import { AppStorage } from "../storage/app_storage.js";
+
+const actionLabels = {
+    complete: "完了",
+    interrupt: "中断",
+    skip: "スキップ",
+    execution: "実行"
+};
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function formatHistoryTime(timestamp) {
+    const date = new Date(timestamp);
+    if (Number.isNaN(date.getTime())) return "日時不明";
+    return new Intl.DateTimeFormat("ja-JP", {
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit"
+    }).format(date);
+}
+
+function renderHistory(historyContainer, history) {
+    if (!history.length) {
+        historyContainer.innerHTML = '<p class="mainmenu-history-empty">直近一週間の実行履歴はありません。</p>';
+        return;
+    }
+
+    historyContainer.innerHTML = history.map((item) => `
+        <p class="mainmenu-history-text">
+            <span class="mainmenu-history-action">${escapeHtml(actionLabels[item.action] || item.action || "実行")}</span>
+            ${escapeHtml(item.title || "名称未設定のタスク")}
+            <time datetime="${escapeHtml(item.timestamp)}">(${formatHistoryTime(item.timestamp)})</time>
+        </p>
+    `).join("");
+}
+
+async function loadRecentHistory(historyContainer) {
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    try {
+        let history;
+        if (AuthState.isLoggedIn()) {
+            const result = await fetchRecentHistory();
+            history = Array.isArray(result) ? result : (result?.history || []);
+        } else {
+            const data = await AppStorage.getAllData();
+            history = (await AppStorage.getHistory())
+                .filter((item) => new Date(item.timestamp).getTime() >= weekAgo)
+                .map((item) => {
+                    const task = data.find((candidate) => candidate.id === item.taskId);
+                    return { ...item, title: task?.data?.title };
+                })
+                .sort((left, right) => new Date(right.timestamp) - new Date(left.timestamp));
+        }
+        renderHistory(historyContainer, history);
+    } catch (error) {
+        console.error("実行履歴の取得に失敗しました", error);
+        historyContainer.innerHTML = '<p class="mainmenu-history-empty">実行履歴を読み込めませんでした。</p>';
+    }
+}
 
 export async function render() {
     const contentView = document.getElementById("content-viewport");
@@ -23,6 +92,12 @@ export async function render() {
                     <button id="decompose-btn" class="btn btn-primary" style="width:100%;">分解する</button>
                     <div id="decomp-loading" style="display: none;">AIがタスクを分析中です...</div>
                 </div>
+                <section class="mainmenu-history" aria-labelledby="recent-history-title">
+                    <h3 id="recent-history-title" class="mainmenu-history-title">直近の実行履歴</h3>
+                    <div id="recent-history" class="card mainmenu-history-card">
+                        <p class="mainmenu-history-empty">読み込み中...</p>
+                    </div>
+                </section>
             </div>
         `;
     }
@@ -32,6 +107,11 @@ export async function render() {
     const submitBtn = document.getElementById("decompose-btn");
     const loadingDiv = document.getElementById("decomp-loading");
     const cancelButton = document.getElementById("cancel-btn");
+    const historyContainer = document.getElementById("recent-history");
+
+    if (historyContainer) {
+        loadRecentHistory(historyContainer);
+    }
 
     if (!form || !taskInput || !taskDetail) {
         return;

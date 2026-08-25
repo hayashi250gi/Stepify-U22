@@ -712,6 +712,31 @@ body {
 
 .mainmenu-history-text {
     font-size: 14px;
+    margin: 0;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.mainmenu-history-text:last-child {
+    border-bottom: 0;
+}
+
+.mainmenu-history-action {
+    display: inline-block;
+    min-width: 42px;
+    margin-right: 8px;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.mainmenu-history-text time,
+.mainmenu-history-empty {
+    color: var(--text-muted);
+}
+
+.mainmenu-history-empty {
+    margin: 0;
+    font-size: 14px;
 }
 
 .setting-card,
@@ -1373,6 +1398,8 @@ body {
 /* タスク入力フォームの調整 */
 .view-container-center {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     padding: 24px;
 }

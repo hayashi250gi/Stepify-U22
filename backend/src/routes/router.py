@@ -38,6 +38,10 @@ class Router:
                 TaskRoute.list_tasks(handler)
                 return
 
+            if path == "/api/tasks/history/recent":
+                TaskRoute.get_recent_history(handler)
+                return
+
             if path == "/api/tasks/suggest":
                 task_id = parse_qs(parsed_path.query).get("task_id", [None])[0]
                 TaskRoute.get_suggestion(handler, int(task_id) if task_id and task_id.isdigit() else None)
