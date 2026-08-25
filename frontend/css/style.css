@@ -117,6 +117,10 @@ body {
     background-color: var(--bg-main);
 }
 
+#content-viewport:has(.task-input-container) {
+    overflow: hidden;
+}
+
 /* ==========================================================================
    3. 共通パーツ & UIコンポーネント
    ========================================================================== */
@@ -695,7 +699,7 @@ body {
 }
 
 .mainmenu-history {
-    max-width: 600px;
+    max-width: var(--card-max-width);
     margin: 24px auto 0;
     width: 100%;
 }
@@ -708,6 +712,8 @@ body {
 
 .mainmenu-history-card {
     padding: 16px;
+    max-height: 240px;
+    overflow-y: scroll;
 }
 
 .mainmenu-history-text {
@@ -725,6 +731,12 @@ body {
     display: inline-block;
     min-width: 42px;
     margin-right: 8px;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.mainmenu-history-parent {
+    margin-left: 8px;
     color: var(--text-muted);
     font-size: 12px;
 }
@@ -1407,5 +1419,10 @@ body {
 .task-input-container {
     width: 100%;
     max-width: var(--card-max-width);
+}
+
+.view-container-center:has(.task-input-container) {
+    min-height: 100%;
+    overflow: hidden;
 }
 

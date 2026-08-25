@@ -43,7 +43,8 @@ function renderHistory(historyContainer, history) {
     historyContainer.innerHTML = history.map((item) => `
         <p class="mainmenu-history-text">
             <span class="mainmenu-history-action">${escapeHtml(actionLabels[item.action] || item.action || "実行")}</span>
-            ${escapeHtml(item.title || "名称未設定のタスク")}
+            <strong>${escapeHtml(item.subtask_title || item.subtaskTitle || "名称未設定のサブタスク")}</strong>
+            <span class="mainmenu-history-parent">（${escapeHtml(item.title || "名称未設定のタスク")}）</span>
             <time datetime="${escapeHtml(item.timestamp)}">(${formatHistoryTime(item.timestamp)})</time>
         </p>
     `).join("");
@@ -62,7 +63,14 @@ async function loadRecentHistory(historyContainer) {
                 .filter((item) => new Date(item.timestamp).getTime() >= weekAgo)
                 .map((item) => {
                     const task = data.find((candidate) => candidate.id === item.taskId);
-                    return { ...item, title: task?.data?.title };
+                    const subtask = task?.data?.subtasks?.find(
+                        (candidate) => String(candidate.subtask_id || candidate.id) === String(item.subtaskId)
+                    );
+                    return {
+                        ...item,
+                        title: task?.data?.title,
+                        subtask_title: subtask?.title
+                    };
                 })
                 .sort((left, right) => new Date(right.timestamp) - new Date(left.timestamp));
         }

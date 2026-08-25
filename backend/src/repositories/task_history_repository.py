@@ -9,10 +9,11 @@ class TaskHistoryRepository:
         with Database.get_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute("""
-                    SELECT h.history_id, h.task_id, t.title, h.subtask_id,
+                          SELECT h.history_id, h.task_id, t.title, s.title, h.subtask_id,
                            h.action, h.created_at
                     FROM task_histories h
                     JOIN tasks t ON t.task_id = h.task_id
+                          LEFT JOIN subtasks s ON s.subtask_id = h.subtask_id
                     WHERE t.user_id = %s
                       AND h.created_at >= CURRENT_TIMESTAMP - INTERVAL '7 days'
                     ORDER BY h.created_at DESC
@@ -22,9 +23,10 @@ class TaskHistoryRepository:
                     "history_id": row[0],
                     "task_id": row[1],
                     "title": row[2],
-                    "subtask_id": row[3],
-                    "action": row[4],
-                    "timestamp": row[5].isoformat() if row[5] else None
+                    "subtask_title": row[3],
+                    "subtask_id": row[4],
+                    "action": row[5],
+                    "timestamp": row[6].isoformat() if row[6] else None
                 } for row in cursor.fetchall()]
 
     @staticmethod
