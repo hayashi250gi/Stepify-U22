@@ -2,7 +2,6 @@
 
 from database.database import Database
 
-
 class UserRepository:
 
     @staticmethod

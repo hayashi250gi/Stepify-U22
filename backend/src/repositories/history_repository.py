@@ -1,4 +1,5 @@
 """履歴を管理するリポジトリモジュール。"""
+
 from database.database import Database
 
 class HistoryRepository:
