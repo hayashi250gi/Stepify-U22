@@ -40,8 +40,8 @@ class TaskService:
             if not str(subtask.get("title", "")).strip():
                 raise ValueError("Subtask title is required.")
             minutes = subtask.get("estimated_minutes")
-            if minutes is not None and (not isinstance(minutes, int) or not 5 <= minutes <= 60):
-                raise ValueError("Estimated minutes must be between 5 and 60.")
+            if minutes is not None and (not isinstance(minutes, int) or not 1 <= minutes <= 60):
+                raise ValueError("Estimated minutes must be between 1 and 60.")
         
         task_id = TaskRepository.create_task(
             user_id=user_id,

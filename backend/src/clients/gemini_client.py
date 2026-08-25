@@ -59,9 +59,9 @@ class GeminiClient:
 
                                         "estimated_minutes": {
                                             "type": "INTEGER",
-                                            "minimum": 5,
+                                            "minimum": 1,
                                             "maximum": 60,
-                                            "description": "実行予定時間(5~60分)"
+                                            "description": "実行予定時間(1~60分)"
                                         }
 
                                     },
