@@ -1,4 +1,5 @@
 import json
+from urllib.parse import parse_qs
 
 from services.auth_service import AuthService
 from utils.response import Response
@@ -16,7 +17,14 @@ class AuthRoute:
 
             body = handler.rfile.read(content_length)
 
-            data = json.loads(body)
+            content_type = handler.headers.get("Content-Type", "")
+            if content_type.startswith("application/x-www-form-urlencoded"):
+                data = {
+                    key: values[0]
+                    for key, values in parse_qs(body.decode("utf-8")).items()
+                }
+            else:
+                data = json.loads(body)
 
         except json.JSONDecodeError:
 
@@ -30,7 +38,7 @@ class AuthRoute:
 
             return
 
-        id_token = data.get("id_token")
+        id_token = data.get("credential") or data.get("id_token")
 
         if not id_token:
 
@@ -62,8 +70,12 @@ class AuthRoute:
 
             return
 
-        Response.json(
+        if content_type.startswith("application/x-www-form-urlencoded"):
+            Response.redirect_with_cookie(
                 handler,
-                200,
-                result
+                "/new",
+                result,
             )
+            return
+
+        Response.json(handler, 200, result)

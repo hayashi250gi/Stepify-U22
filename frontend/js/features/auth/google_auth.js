@@ -51,7 +51,8 @@ export class GoogleAuth {
 
         google.accounts.id.initialize({
             client_id: Config.googleClientId,
-            callback: (response) => GoogleAuth.handleCredentialResponse(response),
+            ux_mode: "redirect",
+            login_uri: `${window.location.origin}/api/auth/google`,
         });
     }
 

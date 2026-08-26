@@ -6,7 +6,7 @@ import { AppStorage } from "/js/features/storage/app_storage.js?v=20260822-17";
 import { AuthState } from "/js/features/auth/auth_state.js";
 import { ThemeManager } from "./features/theme_manager.js";
 import { fetchSettings } from "./features/api.js";
-import { handleRoute, navigate } from "/js/features/router/router.js?v=20260822-36";
+import { handleRoute, navigate } from "/js/features/router/router.js?v=20260826-4";
 
 window.addEventListener("DOMContentLoaded", async () => {
     try {

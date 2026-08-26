@@ -52,6 +52,27 @@ export async function render() {
         });
     };
     let loadedTasks = [];
+    const sortState = {
+        key: "title",
+        direction: 1,
+        renderRows: null,
+    };
+
+    if (!tableBody.dataset.sortBound) {
+        tableBody.dataset.sortBound = "true";
+        tableBody.closest("table").addEventListener("click", (event) => {
+            const button = event.target.closest(".task-sort-btn");
+            if (!button || !sortState.renderRows) return;
+
+            const nextKey = button.dataset.sortKey;
+            if (sortState.key === nextKey) sortState.direction *= -1;
+            else {
+                sortState.key = nextKey;
+                sortState.direction = 1;
+            }
+            sortState.renderRows();
+        });
+    }
 
     const loadingFallback = setTimeout(() => {
         if (tableBody.textContent.includes("読み込み中")) {
@@ -87,32 +108,30 @@ export async function render() {
 
 
         const priorityOrder = { high: 3, medium: 2, low: 1, 高: 3, 中: 2, 低: 1 };
-        let sortKey = "title";
-        let sortDirection = 1;
         const sortTasks = () => {
             tasks.sort((left, right) => {
-                let leftValue = left[sortKey] ?? "";
-                let rightValue = right[sortKey] ?? "";
-                if (sortKey === "progress") {
+                let leftValue = left[sortState.key] ?? "";
+                let rightValue = right[sortState.key] ?? "";
+                if (sortState.key === "progress") {
                     leftValue = Number(leftValue);
                     rightValue = Number(rightValue);
-                } else if (sortKey === "priority") {
+                } else if (sortState.key === "priority") {
                     leftValue = priorityOrder[leftValue] || 0;
                     rightValue = priorityOrder[rightValue] || 0;
                 } else {
                     leftValue = String(leftValue).toLocaleLowerCase("ja");
                     rightValue = String(rightValue).toLocaleLowerCase("ja");
                 }
-                return (leftValue < rightValue ? -1 : leftValue > rightValue ? 1 : 0) * sortDirection;
+                return (leftValue < rightValue ? -1 : leftValue > rightValue ? 1 : 0) * sortState.direction;
             });
         };
-        const renderRows = () => {
+        sortState.renderRows = () => {
         sortTasks();
         document.querySelectorAll(".task-sort-btn").forEach((button) => {
-            const isActive = button.dataset.sortKey === sortKey;
+            const isActive = button.dataset.sortKey === sortState.key;
             button.classList.toggle("is-active", isActive);
-            button.dataset.direction = isActive ? (sortDirection === 1 ? "asc" : "desc") : "";
-            button.setAttribute("aria-sort", isActive ? (sortDirection === 1 ? "ascending" : "descending") : "none");
+            button.dataset.direction = isActive ? (sortState.direction === 1 ? "asc" : "desc") : "";
+            button.setAttribute("aria-sort", isActive ? (sortState.direction === 1 ? "ascending" : "descending") : "none");
         });
         if (!tasks.length) {
             tableBody.innerHTML = "<tr><td colspan=5 style=\"text-align:center;\">登録されたタスクはありません</td></tr>";
@@ -150,18 +169,10 @@ export async function render() {
             });
         });
 
+        }
         };
-        renderRows();
-        document.querySelectorAll(".task-sort-btn").forEach((button) => {
-            button.addEventListener("click", () => {
-                const nextKey = button.dataset.sortKey;
-                if (sortKey === nextKey) sortDirection *= -1;
-                else { sortKey = nextKey; sortDirection = 1; }
-                renderRows();
-            });
-        });
+        sortState.renderRows();
 
-}
         } catch (error) {
             console.error("タスク一覧の取得に失敗しました", error);
             tableBody.innerHTML = "<tr><td colspan=5 style=\"text-align:center;\">読み込みに失敗しました</td></tr>";
