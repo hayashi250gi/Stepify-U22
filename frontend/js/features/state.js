@@ -1,3 +1,10 @@
+// ===================================================
+// ファイル名: state.js
+// 最終更新日: 2026/08/27
+// 作成者: 林健太
+// 概要: アプリケーションの共有状態を管理するモジュール
+// ===================================================
+
 // frontend/js/features/state.js
 export const appState = {
     get currentTaskTitle() { return localStorage.getItem('currentTaskTitle') || ""; },

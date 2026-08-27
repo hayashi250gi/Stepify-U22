@@ -1,3 +1,10 @@
+// ===================================================
+// ファイル名: google_auth.js
+// 最終更新日: 2026/08/27
+// 作成者: 林健太
+// 概要: Googleログイン処理を提供するモジュール
+// ===================================================
+
 import { AuthApi } from "../api/auth_api.js";
 import { Config } from "../../config.js";
 import { AuthState } from "./auth_state.js";

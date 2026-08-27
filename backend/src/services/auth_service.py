@@ -1,3 +1,10 @@
+# ===================================================
+# ファイル名: auth_service.py
+# 最終更新日: 2026/08/27
+# 作成者: 林健太
+# 概要: Googleログインとユーザー認証を提供するサービス
+# ===================================================
+
 from config.config import Config
 
 from services.user_service import UserService

@@ -1,3 +1,10 @@
+# ===================================================
+# ファイル名: settings_route.py
+# 最終更新日: 2026/08/27
+# 作成者: 林健太
+# 概要: ユーザー設定APIのHTTPルートを処理するモジュール
+# ===================================================
+
 import json
 
 from services.settings_service import SettingsService

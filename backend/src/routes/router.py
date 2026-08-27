@@ -1,3 +1,10 @@
+# ===================================================
+# ファイル名: router.py
+# 最終更新日: 2026/08/27
+# 作成者: 林健太
+# 概要: HTTPリクエストを各ルートへ振り分けるルーター
+# ===================================================
+
 import json
 from urllib.parse import parse_qs, urlsplit
 from routes.auth_route import AuthRoute

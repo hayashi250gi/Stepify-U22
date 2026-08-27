@@ -1,3 +1,10 @@
+# ===================================================
+# ファイル名: google_auth_client.py
+# 最終更新日: 2026/08/27
+# 作成者: 林健太
+# 概要: Google認証トークンを検証するクライアント
+# ===================================================
+
 from google.auth.transport import requests
 from google.oauth2 import id_token
 

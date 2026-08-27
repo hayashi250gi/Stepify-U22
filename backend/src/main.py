@@ -1,3 +1,10 @@
+# ===================================================
+# ファイル名: main.py
+# 最終更新日: 2026/08/27
+# 作成者: 林健太
+# 概要: アプリケーションの起動処理を行うエントリーポイント
+# ===================================================
+
 from database.database import Database
 from database.schema_initializer import SchemaInitializer
 

@@ -1,3 +1,10 @@
+// ===================================================
+// ファイル名: login.js
+// 最終更新日: 2026/08/27
+// 作成者: 林健太
+// 概要: ログインページの表示とログイン操作を制御するモジュール
+// ===================================================
+
 // frontend/js/features/pages/login.js
 import { navigate } from "/js/features/router/router.js";
 import { GoogleAuth } from "/js/features/auth/google_auth.js";

@@ -1,3 +1,10 @@
+// ===================================================
+// ファイル名: setting.js
+// 最終更新日: 2026/08/27
+// 作成者: 林健太
+// 概要: 設定ページの表示と設定変更を制御するモジュール
+// ===================================================
+
 import { navigate } from "/js/features/router/router.js";
 import { AuthState } from "/js/features/auth/auth_state.js";
 import { AppStorage } from "/js/features/storage/app_storage.js?v=20260822-17";

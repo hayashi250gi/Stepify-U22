@@ -1,3 +1,10 @@
+// ===================================================
+// ファイル名: main.js
+// 最終更新日: 2026/08/27
+// 作成者: 林健太
+// 概要: フロントエンドアプリケーションを初期化するエントリーポイント
+// ===================================================
+
 import { Config } from "./config.js";
 import { Header } from "/js/features/components/header.js?v=20260822-2";
 import { Sidebar } from "/js/features/components/sidebar.js";

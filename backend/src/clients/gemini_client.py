@@ -1,3 +1,10 @@
+# ===================================================
+# ファイル名: gemini_client.py
+# 最終更新日: 2026/08/27
+# 作成者: 林健太
+# 概要: Gemini APIとの通信を行うクライアント
+# ===================================================
+
 from google import genai
 from google.genai import types
 from google.genai.errors import ClientError
